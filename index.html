@@ -717,7 +717,7 @@ textarea{resize:vertical;min-height:90px;font-family:var(--mono);font-size:.78re
     <div style="display:flex;gap:10px;margin-bottom:.75rem;flex-wrap:wrap;align-items:center">
       <span id="vq-done-count" style="font-size:.8rem;color:var(--muted)"></span>
       <button class="btn btn-outline btn-sm" onclick="toggleVqMode()" id="vq-mode-btn">🔀 เปิดโหมดเรียงลำดับ</button>
-      <button class="btn btn-outline btn-sm" onclick="fixAllQOrder()" title="จัดลำดับทั้งหมดตามที่แสดงอยู่">🔧 ตั้งลำดับใหม่ทั้งหมด</button>
+      <button class="btn btn-outline btn-sm" onclick="fixAllQOrder()" title="จัดลำดับทั้งหมดตามที่แสดง">🔧 ตั้งลำดับใหม่ทั้งหมด</button>
       <button class="btn btn-outline btn-sm" onclick="resetQProgress()">🔄 รีเซ็ตสถานะ</button>
     </div>
     <div id="vq-list" style="max-height:60vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px"></div>
@@ -1700,7 +1700,10 @@ function dateKey(d) {
 async function recordDailyStats(topicId, topicName, total, correct) {
   const date=todayKey();
   let rec=null;
-  try { rec=await idbOp('dailystats','readonly',o=>o.get(date)); } catch(e){}
+  try {
+    const all=await dbGetAll('dailystats');
+    rec=all.find(r=>r.date===date)||null;
+  } catch(e){}
   if (!rec) rec={date,total:0,correct:0,sessions:[],byTopic:{}};
   rec.total+=total; rec.correct+=correct;
   rec.sessions.push({time:Date.now(),topicId,topicName,total,correct});
@@ -2313,7 +2316,9 @@ async function openViewQs(tid) {
   document.getElementById('vq-mode-btn').textContent='🔀 เปิดโหมดเรียงลำดับ';
   document.getElementById('vq-reorder-bar').style.display='none';
   _vqAll=await dbGetIdx('questions','topicId',tid);
+  // เรียงลำดับ: ใช้ qorder ก่อน ถ้าไม่มีใช้ addedAt ถ้าไม่มีใช้ _docId
   _vqAll=sortQs(_vqAll);
+  });
   renderViewQs(_vqAll);
   om('viewqs-modal');
 }
@@ -2336,9 +2341,7 @@ function toggleVqMode() {
   document.getElementById('vq-mode-btn').textContent=
     _vqReorderMode?'✅ ปิดโหมดเรียงลำดับ':'🔀 เปิดโหมดเรียงลำดับ';
   document.getElementById('vq-reorder-bar').style.display=_vqReorderMode?'block':'none';
-  const searchEl=document.getElementById('vq-search');
-  searchEl.disabled=_vqReorderMode;
-  if (_vqReorderMode) searchEl.value='';
+  document.getElementById('vq-search').disabled=_vqReorderMode;
   renderViewQs(_vqAll);
 }
 
@@ -2431,7 +2434,6 @@ function vqDragEnd() {
   _vqDragId=null;
   document.querySelectorAll('[id^=vqrow_]').forEach(r=>r.style.borderColor='');
 }
-// ── จัดลำดับข้อสอบทั้งหมดใหม่ ──────────────────────────────
 async function fixAllQOrder() {
   if (!confirm(`ตั้งลำดับใหม่ทั้งหมด ${_vqAll.length} ข้อ ตามที่แสดงอยู่ตอนนี้?`)) return;
   showLoad('กำลังบันทึกลำดับ...');
