@@ -2507,10 +2507,11 @@ async function fixAllQOrder() {
 async function saveQOrder() {
   showLoad('กำลังบันทึกลำดับ...');
   try {
-    // อัพเดท in-memory ก่อน
+    // อัพเดท in-memory ก่อน — เขียน addedAt ใหม่ด้วยเพื่อให้ sortQs ใช้ addedAt เป็น tiebreaker ที่ถูกต้อง
+    const baseTime=Date.now();
     for (let i=0;i<_vqAll.length;i++) {
       _vqAll[i].qorder=i;
-      if (!_vqAll[i].addedAt) _vqAll[i].addedAt=i;
+      _vqAll[i].addedAt=baseTime+i;
     }
     const BATCH_SIZE=450;
     for (let start=0;start<_vqAll.length;start+=BATCH_SIZE) {
@@ -2525,6 +2526,9 @@ async function saveQOrder() {
       await batch.commit();
       document.getElementById('loading-msg').textContent=`บันทึก ${end}/${_vqAll.length}...`;
     }
+    // โหลดกลับจาก Firestore เพื่อยืนยันว่าสำเร็จจริง และเรียงใหม่
+    _vqAll=await dbGetIdx('questions','topicId',_vqTopicId);
+    _vqAll=sortQs(_vqAll);
     hideLoad();
     toast('บันทึกลำดับแล้ว ✓','ok');
     _vqReorderMode=false;
@@ -2585,6 +2589,7 @@ async function saveEditQ() {
     img_q:imgQ, img_ans:imgAns};
   await dbPut('questions',updated);
   _vqAll=await dbGetIdx('questions','topicId',_vqTopicId);
+  _vqAll=sortQs(_vqAll);
   filterViewQs();
   cm('editq-modal');
   toast('บันทึกแล้ว ✓','ok');
@@ -2595,6 +2600,7 @@ async function deleteEditQ() {
   if (!confirm('ลบข้อสอบนี้?')) return;
   await dbDel('questions',_editQId);
   _vqAll=await dbGetIdx('questions','topicId',_vqTopicId);
+  _vqAll=sortQs(_vqAll);
   filterViewQs();
   cm('editq-modal');
   toast('ลบแล้ว','ok');
