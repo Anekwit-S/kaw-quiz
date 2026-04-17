@@ -2393,10 +2393,7 @@ async function toggleQDone(qid) {
   if (!q) return;
   q.done=!q.done;
   await dbPut('questions',q);
-  renderViewQs(_vqAll.filter(v=>{
-    const sq=document.getElementById('vq-search').value.toLowerCase();
-    return !sq||v.q.toLowerCase().includes(sq);
-  }));
+  filterViewQs();
 }
 
 async function resetQProgress() {
