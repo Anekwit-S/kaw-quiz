@@ -2318,7 +2318,6 @@ async function openViewQs(tid) {
   _vqAll=await dbGetIdx('questions','topicId',tid);
   // เรียงลำดับ: ใช้ qorder ก่อน ถ้าไม่มีใช้ addedAt ถ้าไม่มีใช้ _docId
   _vqAll=sortQs(_vqAll);
-  });
   renderViewQs(_vqAll);
   om('viewqs-modal');
 }
