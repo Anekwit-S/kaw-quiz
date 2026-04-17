@@ -2345,15 +2345,30 @@ async function openViewQs(tid) {
 
 function filterViewQs() {
   if (_vqReorderMode) return;
-  const q=document.getElementById('vq-search').value.toLowerCase().trim();
-  if (!q){ renderViewQs(_vqAll); return; }
-  const filtered=_vqAll.filter(v=>{
-    if (v.q && v.q.toLowerCase().includes(q)) return true;
-    if (v.expl && v.expl.toLowerCase().includes(q)) return true;
-    if (v.a && v.a.some(a=>a.toLowerCase().includes(q))) return true;
-    return false;
-  });
-  renderViewQs(filtered);
+  try {
+    const searchEl=document.getElementById('vq-search');
+    if (!searchEl) return;
+    const q=String(searchEl.value||'').toLowerCase().trim();
+    if (!q){ renderViewQs(_vqAll); return; }
+    const filtered=_vqAll.filter(v=>{
+      if (!v) return false;
+      const qText=String(v.q||'').toLowerCase();
+      if (qText.includes(q)) return true;
+      const explText=String(v.expl||'').toLowerCase();
+      if (explText.includes(q)) return true;
+      if (Array.isArray(v.a)) {
+        for (const a of v.a) {
+          if (String(a||'').toLowerCase().includes(q)) return true;
+        }
+      }
+      return false;
+    });
+    renderViewQs(filtered);
+  } catch(err) {
+    console.error('filterViewQs error:', err);
+    // fallback: แสดงทั้งหมดเพื่อไม่ให้ UI ค้าง
+    try { renderViewQs(_vqAll); } catch(e2){}
+  }
 }
 
 function toggleVqMode() {
@@ -2398,7 +2413,7 @@ function renderViewQs(list) {
         <div style="flex:1;min-width:0">
           <div style="font-size:.9rem;font-weight:500;margin-bottom:5px">${x(q.q)}</div>
           <div style="display:flex;flex-wrap:wrap;gap:3px">
-            ${q.a.map((a,j)=>`<span style="font-size:.72rem;padding:2px 7px;border-radius:4px;background:${j===q.ans?'rgba(63,185,80,.2)':'var(--surface)'};border:1px solid ${j===q.ans?'rgba(63,185,80,.4)':'var(--border)'};color:${j===q.ans?'var(--green)':'var(--muted)'}">${LET2[j]}. ${x(a)}</span>`).join('')}
+            ${(Array.isArray(q.a)?q.a:[]).map((a,j)=>`<span style="font-size:.72rem;padding:2px 7px;border-radius:4px;background:${j===q.ans?'rgba(63,185,80,.2)':'var(--surface)'};border:1px solid ${j===q.ans?'rgba(63,185,80,.4)':'var(--border)'};color:${j===q.ans?'var(--green)':'var(--muted)'}">${LET2[j]}. ${x(a)}</span>`).join('')}
           </div>
           ${q.img_q||q.img_ans?`<div style="font-size:.7rem;color:var(--accent);margin-top:4px">📷 มีรูปภาพ</div>`:''}
         </div>
