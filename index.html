@@ -2381,7 +2381,9 @@ function toggleVqMode() {
   document.getElementById('vq-mode-btn').textContent=
     _vqReorderMode?'✅ ปิดโหมดเรียงลำดับ':'🔀 เปิดโหมดเรียงลำดับ';
   document.getElementById('vq-reorder-bar').style.display=_vqReorderMode?'block':'none';
-  document.getElementById('vq-search').disabled=_vqReorderMode;
+  const searchEl=document.getElementById('vq-search');
+  searchEl.disabled=_vqReorderMode;
+  if (_vqReorderMode) searchEl.value=''; // ล้างค่าค้นหา — กันความสับสนตอนเรียง
   renderViewQs(_vqAll);
 }
 
@@ -2463,8 +2465,12 @@ function vqDrop(e, id) {
   const fi=_vqAll.findIndex(q=>(q._docId||String(q.id))===_vqDragId);
   const ti=_vqAll.findIndex(q=>(q._docId||String(q.id))===id);
   if (fi<0||ti<0) return;
+  // ลบข้อที่ลากออก
   const [moved]=_vqAll.splice(fi,1);
-  _vqAll.splice(ti,0,moved);
+  // ปรับ target index: ถ้าลากลงมาวาง (fi<ti) หลัง splice ออก index เป้าหมายจะลดลง 1
+  const insertAt = fi<ti ? ti-1 : ti;
+  // แทรกหน้าข้อเป้าหมาย (เสมอ) — ทำให้พฤติกรรมคาดเดาได้
+  _vqAll.splice(insertAt,0,moved);
   renderViewQs(_vqAll);
 }
 function vqDragEnd() {
