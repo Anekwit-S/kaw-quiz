@@ -717,7 +717,7 @@ textarea{resize:vertical;min-height:90px;font-family:var(--mono);font-size:.78re
     <div style="display:flex;gap:10px;margin-bottom:.75rem;flex-wrap:wrap;align-items:center">
       <span id="vq-done-count" style="font-size:.8rem;color:var(--muted)"></span>
       <button class="btn btn-outline btn-sm" onclick="toggleVqMode()" id="vq-mode-btn">🔀 เปิดโหมดเรียงลำดับ</button>
-      <button class="btn btn-outline btn-sm" onclick="fixAllQOrder()" title="จัดลำดับตามที่แสดงอยู่ตอนนี้ให้คงที่">🔧 ตั้งลำดับใหม่ทั้งหมด</button>
+      <button class="btn btn-outline btn-sm" onclick="fixAllQOrder()" title="จัดลำดับทั้งหมดตามที่แสดงอยู่">🔧 ตั้งลำดับใหม่ทั้งหมด</button>
       <button class="btn btn-outline btn-sm" onclick="resetQProgress()">🔄 รีเซ็ตสถานะ</button>
     </div>
     <div id="vq-list" style="max-height:60vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px"></div>
@@ -852,16 +852,12 @@ async function dbDel(store, key) {
 }
 
 // ── Shared sort helper ─────────────────────────────────────
-// เรียงข้อสอบ: qorder → addedAt → _docId (stable ทุกกรณี)
 function sortQs(arr) {
   return arr.slice().sort((a,b)=>{
     const ao=a.qorder??null, bo=b.qorder??null;
-    // ถ้าทั้งคู่มี qorder เรียงตาม qorder
     if (ao!==null && bo!==null) return ao-bo;
-    // ถ้ามีแค่ข้างเดียว ข้างที่มี qorder มาก่อน
     if (ao!==null) return -1;
     if (bo!==null) return 1;
-    // ไม่มีทั้งคู่ → เรียงตาม addedAt แล้ว _docId
     const at=(a.addedAt||0), bt=(b.addedAt||0);
     if (at!==bt) return at-bt;
     return String(a._docId||'').localeCompare(String(b._docId||''));
@@ -1101,15 +1097,14 @@ async function addSingleQ() {
   if (a.slice(0,4).some(v=>!v)){toast('กรุณาใส่ตัวเลือก ก.-ง. ให้ครบ','err');return;}
   const imgQ  = getImg('_aqImgQ')  || '';
   const imgAns= getImg('_aqImgAns') || '';
-  // หา qorder สูงสุดที่มีอยู่แล้ว เพื่อต่อท้าย
-  let existingQs=[];
-  try { existingQs=await dbGetIdx('questions','topicId',pendingTopicId); } catch(e){}
-  const maxOrder=existingQs.reduce((m,q)=>q.qorder!=null?Math.max(m,q.qorder):m,-1);
+  let existingQs2=[];
+  try { existingQs2=await dbGetIdx('questions','topicId',pendingTopicId); } catch(e){}
+  const maxOrder2=existingQs2.reduce((m,q)=>q.qorder!=null?Math.max(m,q.qorder):m,-1);
   await dbAdd('questions',{q,a,
     ans:parseInt(document.getElementById('aq-ans').value),
     expl:document.getElementById('aq-expl').value.trim(),
     img_q:imgQ, img_ans:imgAns,
-    qorder: maxOrder+1,
+    qorder: maxOrder2+1,
     addedAt:Date.now(),
     topicId:pendingTopicId});
   ['aq-q','aq-a0','aq-a1','aq-a2','aq-a3','aq-a4','aq-expl'].forEach(id=>document.getElementById(id).value='');
@@ -2239,19 +2234,15 @@ async function doImport() {
   }
   showLoad(`กำลังนำเข้า 0/${_impParsed.length} ข้อ...`);
   cm('import-modal');
-
-  // หา qorder สูงสุดที่มีอยู่แล้วในหัวข้อนี้ เพื่อต่อท้าย
   let existingQs=[];
   try { existingQs=await dbGetIdx('questions','topicId',pendingTopicId); } catch(e){}
   const maxOrder=existingQs.reduce((m,q)=>q.qorder!=null?Math.max(m,q.qorder):m,-1);
-
   let saved=0, failed=0;
   const baseTime=Date.now();
   for (let i=0;i<_impParsed.length;i++) {
     try {
-      // ใส่ qorder และ addedAt เพื่อให้ลำดับคงที่ตามที่นำเข้า
-      _impParsed[i].qorder = maxOrder + 1 + i;
-      _impParsed[i].addedAt = baseTime + i; // ต่างกันทีละ 1ms
+      _impParsed[i].qorder  = maxOrder + 1 + i;
+      _impParsed[i].addedAt = baseTime + i;
       await dbAdd('questions',_impParsed[i]);
       saved++;
     }
@@ -2328,13 +2319,9 @@ async function openViewQs(tid) {
 }
 
 function filterViewQs() {
-  if (_vqReorderMode) return; // ไม่ค้นหาขณะเรียงลำดับ
+  if (_vqReorderMode) return;
   const q=document.getElementById('vq-search').value.toLowerCase().trim();
-  if (!q) {
-    renderViewQs(_vqAll);
-    return;
-  }
-  // ค้นหาในโจทย์ + ตัวเลือก + คำอธิบาย
+  if (!q){ renderViewQs(_vqAll); return; }
   const filtered=_vqAll.filter(v=>{
     if (v.q && v.q.toLowerCase().includes(q)) return true;
     if (v.expl && v.expl.toLowerCase().includes(q)) return true;
@@ -2351,8 +2338,8 @@ function toggleVqMode() {
   document.getElementById('vq-reorder-bar').style.display=_vqReorderMode?'block':'none';
   const searchEl=document.getElementById('vq-search');
   searchEl.disabled=_vqReorderMode;
-  if (_vqReorderMode) searchEl.value=''; // ล้างการค้นหาเมื่อเปิดโหมดเรียง
-  renderViewQs(_vqAll); // แสดงทุกข้อเสมอเมื่อสลับโหมด
+  if (_vqReorderMode) searchEl.value='';
+  renderViewQs(_vqAll);
 }
 
 const LET2=['ก','ข','ค','ง','จ'];
@@ -2445,16 +2432,14 @@ function vqDragEnd() {
   document.querySelectorAll('[id^=vqrow_]').forEach(r=>r.style.borderColor='');
 }
 // ── จัดลำดับข้อสอบทั้งหมดใหม่ ──────────────────────────────
-// บันทึก qorder ให้ทุกข้อตามลำดับที่แสดงอยู่ตอนนี้
 async function fixAllQOrder() {
-  if (!confirm(`ตั้งลำดับใหม่ทั้งหมด ${_vqAll.length} ข้อ ตามที่แสดงอยู่ตอนนี้?\n(ใช้เพื่อแก้ปัญหาลำดับสลับหลังนำเข้า JSON)`)) return;
+  if (!confirm(`ตั้งลำดับใหม่ทั้งหมด ${_vqAll.length} ข้อ ตามที่แสดงอยู่ตอนนี้?`)) return;
   showLoad('กำลังบันทึกลำดับ...');
-  // เรียง addedAt ใหม่ด้วยเพื่อให้ fallback sort ถูกต้อง
-  const baseTime = Date.now();
+  const baseTime=Date.now();
   for (let i=0;i<_vqAll.length;i++) {
-    _vqAll[i].qorder  = i;
-    _vqAll[i].addedAt = baseTime + i;
-    await dbPut('questions', _vqAll[i]);
+    _vqAll[i].qorder=i;
+    _vqAll[i].addedAt=baseTime+i;
+    await dbPut('questions',_vqAll[i]);
     if ((i+1)%20===0)
       document.getElementById('loading-msg').textContent=`บันทึก ${i+1}/${_vqAll.length}...`;
   }
@@ -2462,6 +2447,8 @@ async function fixAllQOrder() {
   toast(`ตั้งลำดับใหม่ทั้งหมด ${_vqAll.length} ข้อ ✓`,'ok');
   renderViewQs(_vqAll);
 }
+
+async function saveQOrder() {
   showLoad('กำลังบันทึกลำดับ...');
   for (let i=0;i<_vqAll.length;i++) {
     _vqAll[i].qorder=i;
