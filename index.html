@@ -2240,23 +2240,44 @@ async function doImport() {
   let existingQs=[];
   try { existingQs=await dbGetIdx('questions','topicId',pendingTopicId); } catch(e){}
   const maxOrder=existingQs.reduce((m,q)=>q.qorder!=null?Math.max(m,q.qorder):m,-1);
-  let saved=0, failed=0;
   const baseTime=Date.now();
+  // ตั้ง qorder / addedAt ก่อน
   for (let i=0;i<_impParsed.length;i++) {
-    try {
-      _impParsed[i].qorder  = maxOrder + 1 + i;
-      _impParsed[i].addedAt = baseTime + i;
-      await dbAdd('questions',_impParsed[i]);
-      saved++;
+    _impParsed[i].qorder  = maxOrder + 1 + i;
+    _impParsed[i].addedAt = baseTime + i;
+  }
+  // เขียนเป็น batch ทีละ 450 ข้อ (ข้อจำกัดของ Firestore คือ 500)
+  let saved=0, failed=0;
+  const BATCH_SIZE=450;
+  const qsCol=col('questions');
+  for (let start=0;start<_impParsed.length;start+=BATCH_SIZE) {
+    const end=Math.min(start+BATCH_SIZE,_impParsed.length);
+    const batch=_db.batch();
+    const refs=[];
+    for (let i=start;i<end;i++) {
+      const ref=qsCol.doc(); // auto-id
+      const data={..._impParsed[i]}; delete data._docId;
+      batch.set(ref,data);
+      refs.push({i,ref});
     }
-    catch(e){ failed++; console.error(e); }
-    if ((i+1)%20===0||i===_impParsed.length-1)
-      document.getElementById('loading-msg').textContent=`กำลังนำเข้า ${i+1}/${_impParsed.length} ข้อ...`;
+    try {
+      await batch.commit();
+      // เซ็ต _docId กลับเข้า object ให้ตรงกับ Firestore
+      refs.forEach(({i,ref})=>{
+        _impParsed[i]._docId=ref.id;
+        _impParsed[i].id=ref.id;
+      });
+      saved+=refs.length;
+    } catch(e) {
+      console.error('batch failed',e);
+      failed+=refs.length;
+    }
+    document.getElementById('loading-msg').textContent=`กำลังนำเข้า ${end}/${_impParsed.length} ข้อ...`;
   }
   _impParsed=[]; _impImgMap={};
   hideLoad(); await renderHome();
   if (failed===0) toast(`นำเข้าสำเร็จ ${saved} ข้อ ✓`,'ok');
-  else toast(`นำเข้า ${saved} ข้อ · ผิดรูปแบบ ${failed} ข้อ`,'err');
+  else toast(`นำเข้า ${saved} ข้อ · ผิดพลาด ${failed} ข้อ`,'err');
 }
 
 
@@ -2434,31 +2455,66 @@ async function fixAllQOrder() {
   if (!confirm(`ตั้งลำดับใหม่ทั้งหมด ${_vqAll.length} ข้อ ตามที่แสดงอยู่ตอนนี้?`)) return;
   showLoad('กำลังบันทึกลำดับ...');
   const baseTime=Date.now();
-  for (let i=0;i<_vqAll.length;i++) {
-    _vqAll[i].qorder=i;
-    _vqAll[i].addedAt=baseTime+i;
-    await dbPut('questions',_vqAll[i]);
-    if ((i+1)%20===0)
-      document.getElementById('loading-msg').textContent=`บันทึก ${i+1}/${_vqAll.length}...`;
+  try {
+    // อัพเดท in-memory ให้เรียงก่อน
+    for (let i=0;i<_vqAll.length;i++) {
+      _vqAll[i].qorder=i;
+      _vqAll[i].addedAt=baseTime+i;
+    }
+    // เขียนเป็น batch ทีละ 500 op (ข้อจำกัดของ Firestore)
+    const BATCH_SIZE=450;
+    for (let start=0;start<_vqAll.length;start+=BATCH_SIZE) {
+      const end=Math.min(start+BATCH_SIZE,_vqAll.length);
+      const batch=_db.batch();
+      for (let i=start;i<end;i++) {
+        const q=_vqAll[i];
+        const key=q._docId||q.id||q.date;
+        if (!key) continue;
+        batch.update(col('questions').doc(String(key)),{qorder:q.qorder,addedAt:q.addedAt});
+      }
+      await batch.commit();
+      document.getElementById('loading-msg').textContent=`บันทึก ${end}/${_vqAll.length}...`;
+    }
+    hideLoad();
+    toast(`ตั้งลำดับใหม่ทั้งหมด ${_vqAll.length} ข้อ ✓`,'ok');
+    renderViewQs(_vqAll);
+  } catch(e) {
+    console.error(e); hideLoad();
+    toast('บันทึกลำดับไม่สำเร็จ: '+e.message,'err');
   }
-  hideLoad();
-  toast(`ตั้งลำดับใหม่ทั้งหมด ${_vqAll.length} ข้อ ✓`,'ok');
-  renderViewQs(_vqAll);
 }
 
 async function saveQOrder() {
   showLoad('กำลังบันทึกลำดับ...');
-  for (let i=0;i<_vqAll.length;i++) {
-    _vqAll[i].qorder=i;
-    if (!_vqAll[i].addedAt) _vqAll[i].addedAt=i; // fallback
-    await dbPut('questions',_vqAll[i]);
+  try {
+    // อัพเดท in-memory ก่อน
+    for (let i=0;i<_vqAll.length;i++) {
+      _vqAll[i].qorder=i;
+      if (!_vqAll[i].addedAt) _vqAll[i].addedAt=i;
+    }
+    const BATCH_SIZE=450;
+    for (let start=0;start<_vqAll.length;start+=BATCH_SIZE) {
+      const end=Math.min(start+BATCH_SIZE,_vqAll.length);
+      const batch=_db.batch();
+      for (let i=start;i<end;i++) {
+        const q=_vqAll[i];
+        const key=q._docId||q.id||q.date;
+        if (!key) continue;
+        batch.update(col('questions').doc(String(key)),{qorder:q.qorder,addedAt:q.addedAt});
+      }
+      await batch.commit();
+      document.getElementById('loading-msg').textContent=`บันทึก ${end}/${_vqAll.length}...`;
+    }
+    hideLoad();
+    toast('บันทึกลำดับแล้ว ✓','ok');
+    _vqReorderMode=false;
+    document.getElementById('vq-mode-btn').textContent='🔀 เปิดโหมดเรียงลำดับ';
+    document.getElementById('vq-reorder-bar').style.display='none';
+    renderViewQs(_vqAll);
+  } catch(e) {
+    console.error(e); hideLoad();
+    toast('บันทึกลำดับไม่สำเร็จ: '+e.message,'err');
   }
-  hideLoad();
-  toast('บันทึกลำดับแล้ว ✓','ok');
-  _vqReorderMode=false;
-  document.getElementById('vq-mode-btn').textContent='🔀 เปิดโหมดเรียงลำดับ';
-  document.getElementById('vq-reorder-bar').style.display='none';
-  renderViewQs(_vqAll);
 }
 
 async function openEditQ(qid) {
