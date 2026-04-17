@@ -2334,6 +2334,7 @@ async function openViewQs(tid) {
   const t=topics.find(v=>v.id===tid);
   document.getElementById('vq-topic-name').textContent=t.name;
   document.getElementById('vq-search').value='';
+  document.getElementById('vq-search').disabled=false;
   document.getElementById('vq-mode-btn').textContent='🔀 เปิดโหมดเรียงลำดับ';
   document.getElementById('vq-reorder-bar').style.display='none';
   _vqAll=await dbGetIdx('questions','topicId',tid);
@@ -2530,6 +2531,7 @@ async function saveQOrder() {
     _vqReorderMode=false;
     document.getElementById('vq-mode-btn').textContent='🔀 เปิดโหมดเรียงลำดับ';
     document.getElementById('vq-reorder-bar').style.display='none';
+    document.getElementById('vq-search').disabled=false;
     renderViewQs(_vqAll);
   } catch(e) {
     console.error(e); hideLoad();
