@@ -1,0 +1,2612 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ข้อสอบ กว. เครื่องกล</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d1117;--surface:#161b22;--surface2:#21262d;--border:#30363d;
+  --accent:#388bfd;--green:#3fb950;--red:#f85149;--yellow:#d29922;
+  --text:#e6edf3;--muted:#8b949e;
+  --font:'Sarabun',sans-serif;--mono:'IBM Plex Mono',monospace;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
+nav{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.5rem;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200}
+.logo{font-size:1rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.logo-badge{background:var(--accent);color:#fff;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:4px;font-family:var(--mono)}
+.nav-tabs{display:flex;gap:2px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px}
+.nav-tab{padding:5px 14px;border-radius:6px;border:none;background:transparent;color:var(--muted);font-family:var(--font);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .15s}
+.nav-tab.active{background:var(--accent);color:#fff}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:none;font-family:var(--font);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .15s}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#58a6ff}
+.btn-outline{background:transparent;color:var(--muted);border:1px solid var(--border)}.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.btn-ghost{background:transparent;color:var(--muted);padding:7px 10px}.btn-ghost:hover{color:var(--text)}
+.btn-danger{background:rgba(248,81,73,.15);color:var(--red);border:1px solid rgba(248,81,73,.3)}.btn-danger:hover{background:rgba(248,81,73,.25)}
+.btn-yellow{background:rgba(210,153,34,.15);color:var(--yellow);border:1px solid rgba(210,153,34,.3)}.btn-yellow:hover{background:rgba(210,153,34,.25)}
+.btn-sm{padding:5px 10px;font-size:.8rem}
+.page{display:none}.page.active{display:block}
+.page-inner{max-width:1000px;margin:0 auto;padding:1.5rem}
+.section-title{font-size:1.4rem;font-weight:700;margin-bottom:.4rem}
+.section-sub{color:var(--muted);font-size:.9rem;margin-bottom:1.5rem}
+.stats-row{display:flex;gap:10px;margin-bottom:1.5rem;flex-wrap:wrap}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 18px;flex:1;min-width:110px}
+.stat-num{font-size:1.5rem;font-weight:700;font-family:var(--mono)}
+.stat-label{font-size:.78rem;color:var(--muted)}
+
+/* TOPIC CARDS */
+.topics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-bottom:1.5rem}
+.topic-card{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:1.2rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.topic-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--tc,var(--accent))}
+.topic-card:hover{border-color:var(--tc,var(--accent));transform:translateY(-2px)}
+.topic-icon{font-size:1.6rem;margin-bottom:.5rem}
+.topic-name{font-weight:700;font-size:.95rem;margin-bottom:3px}
+.topic-meta{font-size:.78rem;color:var(--muted);margin-bottom:.8rem}
+.topic-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
+.tbtn{display:flex;align-items:center;justify-content:center;gap:4px;padding:6px 4px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--font);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s;width:100%}
+.tbtn:hover{border-color:var(--accent);color:var(--accent)}
+.tbtn.tdoc{border-color:rgba(210,153,34,.35);color:var(--yellow);background:rgba(210,153,34,.07)}.tbtn.tdoc:hover{background:rgba(210,153,34,.16)}
+.tbtn.tdel{border-color:rgba(248,81,73,.35);color:var(--red);background:rgba(248,81,73,.07)}.tbtn.tdel:hover{background:rgba(248,81,73,.16)}
+/* DRAG & DROP SORT */
+.topic-card.dragging{opacity:.4;transform:scale(.97)!important;border-style:dashed}
+.topic-card.drag-over{border-color:var(--accent)!important;transform:translateY(-4px)!important}
+.drag-handle{cursor:grab;display:flex;align-items:center;justify-content:center;color:var(--muted);padding:0 4px;font-size:.9rem;flex-shrink:0;touch-action:none}
+.drag-handle:active{cursor:grabbing}
+
+/* 3-DOT MENU */
+.topic-mnu-wrap{position:relative;display:inline-block}
+.topic-mnu-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:1.1rem;transition:all .15s;flex-shrink:0}
+.topic-mnu-btn:hover{border-color:var(--accent);color:var(--accent)}
+.topic-mnu-dropdown{display:none;position:absolute;right:0;top:36px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:5px;min-width:160px;z-index:300;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.topic-mnu-dropdown.open{display:block}
+.topic-mnu-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:7px;border:none;background:transparent;color:var(--text);font-family:var(--font);font-size:.85rem;font-weight:500;cursor:pointer;width:100%;text-align:left;transition:background .12s}
+.topic-mnu-item:hover{background:var(--surface2)}
+.topic-mnu-item.danger{color:var(--red)}.topic-mnu-item.danger:hover{background:rgba(248,81,73,.12)}
+.topic-add-card{background:var(--surface);border:2px dashed var(--border);border-radius:14px;min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;color:var(--muted);gap:6px}
+.topic-add-card:hover{border-color:var(--accent);color:var(--accent)}
+/* Emoji picker */
+.ebtn{padding:4px 10px;border-radius:14px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.75rem;cursor:pointer;font-family:var(--font);transition:all .12s}
+.ebtn:hover,.ebtn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.emoji-item{font-size:1.4rem;padding:4px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;transition:background .1s}
+.emoji-item:hover{background:var(--surface)}
+/* Import tabs */
+.itab{flex:1;padding:6px;border-radius:6px;border:none;background:transparent;color:var(--muted);font-family:var(--font);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .12s}
+.itab.active{background:var(--surface);color:var(--text)}
+
+/* LIBRARY */
+.lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
+.lib-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .15s}
+.lib-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.lib-card-thumb{width:100%;height:190px;object-fit:cover;display:block;background:var(--surface2)}
+.lib-card-body{padding:10px}
+.lib-card-name{font-size:.85rem;font-weight:600;margin-bottom:2px}
+.lib-card-meta{font-size:.75rem;color:var(--muted)}
+.lib-add-card{background:var(--surface);border:2px dashed var(--border);border-radius:12px;min-height:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;color:var(--muted);gap:8px}
+.lib-add-card:hover{border-color:var(--accent);color:var(--accent)}
+.search-bar{display:flex;gap:8px;margin-bottom:1rem}
+.search-bar input{flex:1;margin-bottom:0}
+
+/* QUIZ */
+#page-quiz{max-width:780px;margin:0 auto;padding:1.5rem}
+.quiz-topbar{display:flex;align-items:center;gap:12px;margin-bottom:1rem}
+.quiz-topic-name{font-size:.85rem;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.progress-bar{height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s}
+.progress-info{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);font-family:var(--mono);margin-bottom:1.2rem}
+.question-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem}
+.q-tag{font-size:.72rem;color:var(--muted);font-family:var(--mono);margin-bottom:8px}
+.q-text{font-size:1.05rem;line-height:1.7;font-weight:500}
+.q-img-wrap{border-radius:8px;overflow:hidden;border:1px solid var(--border);margin-bottom:.75rem}
+.q-img-wrap img{width:100%;display:block}
+.choices{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
+.cbtn{width:100%;padding:12px 16px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--font);font-size:.95rem;text-align:left;cursor:pointer;transition:all .15s;display:flex;align-items:flex-start;gap:12px}
+.cbtn:hover:not(.disabled){border-color:var(--accent);background:rgba(56,139,253,.05)}
+.cletter{width:28px;height:28px;border-radius:6px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.8rem;font-weight:600;color:var(--muted);flex-shrink:0;margin-top:1px;transition:all .2s}
+.ctext{flex:1;line-height:1.5}
+.cbtn.disabled{cursor:default}
+.cbtn.correct{border-color:var(--green)!important;background:rgba(63,185,80,.07)!important}
+.cbtn.correct .cletter{background:var(--green);color:#0a1a0a;border-color:var(--green)}
+.cbtn.wrong{border-color:var(--red)!important;background:rgba(248,81,73,.07)!important}
+.cbtn.wrong .cletter{background:var(--red);color:#fff;border-color:var(--red)}
+.cbtn.showcorrect{border-color:var(--green);background:rgba(63,185,80,.07)}
+.cbtn.showcorrect .cletter{background:var(--green);color:#0a1a0a;border-color:var(--green)}
+.status-badge{display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;font-weight:700;font-size:1rem;margin-bottom:1rem;border:1px solid;width:100%}
+.status-badge.correct{background:rgba(63,185,80,.1);color:var(--green);border-color:rgba(63,185,80,.3)}
+.status-badge.wrong{background:rgba(248,81,73,.1);color:var(--red);border-color:rgba(248,81,73,.3)}
+.reveal-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1rem;animation:slidein .3s ease}
+@keyframes slidein{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.reveal-header{padding:10px 16px;border-bottom:1px solid var(--border);font-size:.85rem;font-weight:600;color:var(--muted)}
+.reveal-body img{width:100%;display:block}
+.reveal-expl{padding:14px 16px;font-size:.88rem;line-height:1.6;color:var(--text);border-top:1px solid var(--border)}
+.reveal-noimg{padding:14px 16px;font-size:.88rem;color:var(--muted)}
+.quiz-nav{display:flex;gap:10px;align-items:center}
+
+/* SCORE */
+#page-score{max-width:780px;margin:0 auto;padding:1.5rem;text-align:center}
+.score-ring{width:150px;height:150px;border-radius:50%;border:5px solid var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 1.5rem}
+.score-big{font-size:2.8rem;font-weight:700;font-family:var(--mono)}
+.score-of{font-size:.8rem;color:var(--muted)}
+.score-title{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+.score-sub{color:var(--muted);font-size:.9rem;margin-bottom:2rem}
+.score-btns{display:flex;gap:10px;justify-content:center;margin-bottom:2rem}
+.review-section{text-align:left}
+.review-section h3{font-size:1rem;font-weight:600;margin-bottom:1rem;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.rv-item{padding:12px;border-radius:10px;margin-bottom:8px;border:1px solid var(--border);background:var(--surface)}
+.rv-item.ok{border-left:3px solid var(--green)}
+.rv-item.ng{border-left:3px solid var(--red)}
+.rv-q{font-size:.88rem;margin-bottom:4px}
+.rv-ans{font-size:.82rem}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:500;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;width:100%;max-width:600px;max-height:92vh;overflow-y:auto}
+.modal h3{font-size:1.1rem;font-weight:700;margin-bottom:.5rem}
+.modal p{font-size:.88rem;color:var(--muted);margin-bottom:1rem;line-height:1.5}
+label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+input[type=text],textarea,select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:var(--font);font-size:.9rem;outline:none;transition:border-color .2s;margin-bottom:1rem}
+input[type=text]:focus,textarea:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:90px;font-family:var(--mono);font-size:.78rem}
+.flex{display:flex;gap:8px;flex-wrap:wrap}
+.codehint{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-bottom:1rem;line-height:1.7;overflow-x:auto;white-space:pre}
+.mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.2rem}
+.mode-card{background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:12px 10px;cursor:pointer;transition:all .15s;text-align:center}
+.mode-card:hover,.mode-card.selected{border-color:var(--accent)}
+.mode-card.selected{background:rgba(56,139,253,.08)}
+.mode-icon{font-size:1.4rem;margin-bottom:5px}
+.mode-name{font-size:.82rem;font-weight:600}
+.mode-desc{font-size:.72rem;color:var(--muted);margin-top:2px}
+.img-zone{border:2px dashed var(--border);border-radius:10px;padding:1rem;text-align:center;cursor:pointer;transition:all .15s;margin-bottom:.8rem}
+.img-zone:hover{border-color:var(--accent)}
+.img-prev{width:100%;border-radius:8px;margin-top:8px;max-height:180px;object-fit:contain;display:none}
+.color-row{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
+.cdot{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.cdot.selected{border-color:#fff;transform:scale(1.2)}
+
+/* STATS PAGE */
+.pbtn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--font);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.sday-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;margin-bottom:10px;display:flex;align-items:center;gap:14px;transition:all .15s}
+.sday-card:hover{border-color:var(--accent)}
+.sday-date{font-family:var(--mono);font-size:.82rem;color:var(--muted);min-width:90px}
+.sday-bars{flex:1;display:flex;flex-direction:column;gap:4px}
+.sday-bar-wrap{display:flex;align-items:center;gap:8px;font-size:.78rem}
+.sday-bar-bg{flex:1;height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.sday-bar-fill{height:100%;border-radius:4px;transition:width .4s ease}
+.sday-nums{min-width:60px;text-align:right;font-family:var(--mono);font-size:.78rem}
+.sday-pct{font-family:var(--mono);font-size:1rem;font-weight:700;min-width:48px;text-align:right}
+.big-stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.5rem;text-align:center;flex:1;min-width:130px}
+.big-stat-num{font-size:2rem;font-weight:700;font-family:var(--mono);margin-bottom:4px}
+.big-stat-label{font-size:.78rem;color:var(--muted)}
+.streak-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(210,153,34,.12);border:1px solid rgba(210,153,34,.3);color:var(--yellow);border-radius:10px;padding:6px 14px;font-weight:700;font-size:.9rem}
+.chart-bar-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.chart-bar-outer{width:100%;background:var(--surface2);border-radius:4px 4px 0 0;display:flex;flex-direction:column;justify-content:flex-end;height:100px}
+.chart-bar-inner{border-radius:4px 4px 0 0;transition:height .4s ease}
+.chart-label{font-size:.68rem;color:var(--muted);text-align:center;font-family:var(--mono)}
+.topic-stat-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.topic-stat-row:last-child{border-bottom:none}
+.topic-stat-name{flex:1;font-size:.88rem;font-weight:500}
+.topic-stat-bar-bg{width:120px;height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.topic-stat-bar-fill{height:100%;border-radius:4px}
+.topic-stat-nums{font-family:var(--mono);font-size:.78rem;color:var(--muted);min-width:80px;text-align:right}
+.docs-modal{max-width:800px}
+.docs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px;max-height:52vh;overflow-y:auto;padding-right:2px}
+.doc-card{border-radius:10px;overflow:hidden;border:1px solid var(--border);background:var(--surface2)}
+.doc-thumb{width:100%;height:130px;object-fit:cover;display:block;cursor:zoom-in;background:var(--surface2)}
+.doc-pdf-thumb{height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:4px}
+.doc-foot{padding:6px 8px;display:flex;align-items:center;gap:4px}
+.doc-name{font-size:.7rem;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.doc-del{background:rgba(248,81,73,.15);border:1px solid rgba(248,81,73,.3);border-radius:5px;color:var(--red);cursor:pointer;padding:2px 6px;font-size:.72rem;flex-shrink:0}
+
+/* PDF VIEWER MODAL */
+.pdf-viewer-modal{max-width:900px;width:98vw}
+.pdf-nav{display:flex;align-items:center;gap:10px;margin-bottom:1rem;flex-wrap:wrap}
+.pdf-page-info{font-family:var(--mono);font-size:.85rem;color:var(--muted)}
+#pdf-canvas-wrap{background:#fff;border-radius:8px;overflow:auto;display:flex;justify-content:center}
+#pdf-canvas{display:block;max-width:100%}
+
+/* LIGHTBOX for images */
+#lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:600;align-items:center;justify-content:center;padding:1rem}
+#lightbox.open{display:flex}
+#lb-img{max-width:100%;max-height:90vh;border-radius:8px;object-fit:contain}
+#lb-close{position:fixed;top:1rem;right:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;color:var(--text);font-family:var(--font);font-weight:600;font-size:.9rem}
+
+/* TOAST */
+#toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:.88rem;z-index:999;transform:translateY(60px);opacity:0;transition:all .25s;max-width:280px}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.ok{border-color:var(--green);color:var(--green)}
+#toast.err{border-color:var(--red);color:var(--red)}
+
+/* SPINNER */
+.spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading-overlay{position:fixed;inset:0;background:rgba(13,17,23,.88);z-index:400;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-size:.9rem;color:var(--muted)}
+
+@media(max-width:600px){
+  .topics-grid{grid-template-columns:1fr 1fr}
+  .mode-grid{grid-template-columns:1fr 1fr}
+  .lib-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+  nav{padding:.75rem 1rem}
+  .page-inner{padding:1rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-badge">กว.</div>
+    ข้อสอบวิศวกรรมเครื่องกล
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showMain('home')">📚 หัวข้อ</button>
+      <button class="nav-tab" onclick="showMain('library')">🖼 คลังหนังสือ</button>
+      <button class="nav-tab" onclick="showMain('stats')">📊 สถิติ</button>
+    </div>
+    <div id="nav-user"></div>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <div class="page-inner">
+    <div class="section-title">หัวข้อข้อสอบ</div>
+    <div class="section-sub">เลือกหัวข้อที่ต้องการทำ หรือเพิ่มหัวข้อใหม่</div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num" id="st-topics">0</div><div class="stat-label">หัวข้อ</div></div>
+      <div class="stat-card"><div class="stat-num" id="st-total">0</div><div class="stat-label">ข้อสอบทั้งหมด</div></div>
+      <div class="stat-card"><div class="stat-num" id="st-session">0</div><div class="stat-label">ทำแล้ว (session)</div></div>
+    </div>
+    <div id="topics-grid" class="topics-grid"></div>
+  </div>
+</div>
+
+<!-- LIBRARY -->
+<div id="page-library" class="page">
+  <div class="page-inner">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:10px">
+      <div><div class="section-title">คลังเอกสาร</div><div class="section-sub" style="margin-bottom:0">เก็บรูป / PDF / Word / Excel / PowerPoint</div></div>
+      <button class="btn btn-primary" onclick="openAddBook()">+ เพิ่มแฟ้ม</button>
+    </div>
+    <div class="search-bar"><input type="text" id="lib-search" placeholder="🔍 ค้นหา..." oninput="renderLibrary()"></div>
+    <div id="lib-grid" class="lib-grid"></div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div id="page-stats" class="page">
+  <div class="page-inner">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:10px">
+      <div>
+        <div class="section-title">📊 สถิติการเรียน</div>
+        <div class="section-sub" style="margin-bottom:0">บันทึกความก้าวหน้าของคุณ</div>
+      </div>
+      <!-- stats 3-dot menu -->
+      <div class="topic-mnu-wrap">
+        <button class="topic-mnu-btn" onclick="toggleStatsMenu(event)" title="ตัวเลือก" style="width:36px;height:36px">⋯</button>
+        <div class="topic-mnu-dropdown" id="stats-mnu" style="right:0;top:42px">
+          <button class="topic-mnu-item" onclick="closeStatsMenu();exportStatsCSV()">📥 ส่งออกสถิติ (CSV)</button>
+          <button class="topic-mnu-item" onclick="closeStatsMenu();printStats()">🖨️ พิมพ์สถิติ</button>
+          <button class="topic-mnu-item danger" onclick="closeStatsMenu();confirmClearStats()">🗑 ล้างสถิติทั้งหมด</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PERIOD FILTER BAR -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.5rem">
+      <div style="font-size:.82rem;color:var(--muted);margin-bottom:.75rem;font-weight:600">ช่วงเวลาที่แสดง</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.75rem" id="period-btns">
+        <button class="pbtn active" onclick="setPeriod('today',this)">วันนี้</button>
+        <button class="pbtn" onclick="setPeriod('7',this)">7 วัน</button>
+        <button class="pbtn" onclick="setPeriod('30',this)">30 วัน</button>
+        <button class="pbtn" onclick="setPeriod('365',this)">1 ปี</button>
+        <button class="pbtn" onclick="setPeriod('all',this)">ทั้งหมด</button>
+        <button class="pbtn" onclick="setPeriod('custom',this)">กำหนดเอง</button>
+      </div>
+      <div id="custom-range" style="display:none;align-items:center;gap:8px;flex-wrap:wrap">
+        <label style="margin-bottom:0;font-size:.82rem">จาก</label>
+        <div style="display:flex;gap:4px;align-items:center">
+          <select id="df-d" style="width:62px;margin-bottom:0;font-size:.82rem;padding:6px 4px" onchange="onCustomDate()"></select>
+          <select id="df-m" style="width:100px;margin-bottom:0;font-size:.82rem;padding:6px 4px" onchange="onCustomDate()"></select>
+          <select id="df-y" style="width:76px;margin-bottom:0;font-size:.82rem;padding:6px 4px" onchange="onCustomDate()"></select>
+        </div>
+        <label style="margin-bottom:0;font-size:.82rem">ถึง</label>
+        <div style="display:flex;gap:4px;align-items:center">
+          <select id="dt-d" style="width:62px;margin-bottom:0;font-size:.82rem;padding:6px 4px" onchange="onCustomDate()"></select>
+          <select id="dt-m" style="width:100px;margin-bottom:0;font-size:.82rem;padding:6px 4px" onchange="onCustomDate()"></select>
+          <select id="dt-y" style="width:76px;margin-bottom:0;font-size:.82rem;padding:6px 4px" onchange="onCustomDate()"></select>
+        </div>
+      </div>
+      <div style="font-size:.78rem;color:var(--muted)" id="period-desc">กำลังโหลด...</div>
+    </div>
+
+    <!-- SUMMARY CARDS (filtered) -->
+    <div style="display:flex;gap:10px;margin-bottom:1.5rem;flex-wrap:wrap">
+      <div class="big-stat"><div class="big-stat-num" id="ov-total">0</div><div class="big-stat-label">ทำทั้งหมด (ข้อ)</div></div>
+      <div class="big-stat"><div class="big-stat-num" style="color:var(--green)" id="ov-correct">0</div><div class="big-stat-label">ถูก</div></div>
+      <div class="big-stat"><div class="big-stat-num" style="color:var(--red)" id="ov-wrong">0</div><div class="big-stat-label">ผิด</div></div>
+      <div class="big-stat"><div class="big-stat-num" style="color:var(--accent)" id="ov-pct">0%</div><div class="big-stat-label">% ถูก</div></div>
+      <div class="big-stat"><div class="big-stat-num" style="color:var(--yellow)" id="ov-days">0</div><div class="big-stat-label">วันที่มีกิจกรรม</div></div>
+    </div>
+
+    <!-- STREAK + TODAY -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;flex-wrap:wrap">
+      <div class="streak-badge">🔥 <span id="streak-num">0</span> วันติดต่อกัน</div>
+      <div style="font-size:.85rem;color:var(--muted)">วันนี้: <span id="today-summary" style="color:var(--text)">ยังไม่ได้ทำ</span></div>
+    </div>
+
+    <!-- BAR CHART (dynamic label) -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem;margin-bottom:1.5rem">
+      <div style="font-size:.9rem;font-weight:600;margin-bottom:1rem;color:var(--muted)" id="chart-title">7 วันล่าสุด</div>
+      <div style="display:flex;gap:4px;align-items:flex-end;height:120px;margin-bottom:8px;overflow-x:auto" id="week-chart"></div>
+      <div style="display:flex;gap:4px;overflow-x:auto" id="week-labels"></div>
+    </div>
+
+    <!-- BY TOPIC (filtered) — clickable -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem;margin-bottom:1.5rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
+        <div style="font-size:.9rem;font-weight:600;color:var(--muted)">สถิติแยกตามหัวข้อ</div>
+        <button class="btn btn-ghost btn-sm" id="clear-topic-filter" style="display:none;color:var(--accent)" onclick="clearTopicFilter()">✕ ดูทั้งหมด</button>
+      </div>
+      <div id="topic-stats-list"></div>
+    </div>
+
+    <!-- TOPIC DETAIL (shown when topic selected) -->
+    <div id="topic-detail-wrap" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem;margin-bottom:1.5rem">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;flex-wrap:wrap">
+        <div style="font-size:1rem;font-weight:700" id="topic-detail-name"></div>
+        <div style="flex:1"></div>
+        <button class="btn btn-ghost btn-sm" onclick="clearTopicFilter()">← กลับ</button>
+      </div>
+      <!-- mini summary -->
+      <div style="display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap" id="topic-detail-stats"></div>
+      <!-- sessions in this topic -->
+      <div style="font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:.75rem">ประวัติการสอบ</div>
+      <div id="topic-detail-sessions"></div>
+    </div>
+
+    <!-- DAILY LIST (filtered) -->
+    <div id="daily-wrap" style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem">
+      <div style="font-size:.9rem;font-weight:600;margin-bottom:1rem;color:var(--muted)">ประวัติรายวัน</div>
+      <div id="daily-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM CLEAR STATS -->
+<div class="modal-overlay" id="clear-stats-modal">
+  <div class="modal" style="max-width:380px">
+    <h3>🗑 ล้างสถิติทั้งหมด?</h3>
+    <p>ข้อมูลสถิติทุกวันจะถูกลบถาวร ข้อสอบและเอกสารจะยังอยู่ครบ</p>
+    <div class="flex"><button class="btn btn-danger" onclick="doClearStats()">ยืนยันล้าง</button><button class="btn btn-outline" onclick="cm('clear-stats-modal')">ยกเลิก</button></div>
+  </div>
+</div>
+<div id="page-quiz" class="page">
+  <div style="max-width:780px;margin:0 auto;padding:1.5rem">
+    <div class="quiz-topbar">
+      <button class="btn btn-ghost" onclick="confirmExit()">← ออก</button>
+      <div class="quiz-topic-name" id="quiz-topic-name"></div>
+      <div id="live-score" style="font-family:var(--mono);font-size:.82rem;color:var(--muted)"></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="quiz-prog"></div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
+      <div class="progress-info" style="margin-bottom:0"><span id="prog-label">ข้อที่ 0/0</span><span id="prog-pct" style="margin-left:1rem">0%</span></div>
+      <!-- ปุ่มนำทาง — อยู่ด้านบนใต้ progress bar -->
+      <div class="quiz-nav" id="quiz-nav" style="display:flex;margin-bottom:0">
+        <button class="btn btn-outline" id="prev-btn" onclick="prevQ()" style="display:none">← ย้อนกลับ</button>
+        <button class="btn btn-outline" id="skip-btn" onclick="skipQ()">ข้าม</button>
+        <button class="btn btn-primary" id="next-btn" onclick="nextQ()" style="display:none">ข้อถัดไป →</button>
+      </div>
+    </div>
+    <div class="question-card">
+      <div class="q-tag" id="q-tag"></div>
+      <div id="q-img-wrap" class="q-img-wrap" style="display:none"><img id="q-img" alt="โจทย์"></div>
+      <div class="q-text" id="q-text"></div>
+    </div>
+    <div class="choices" id="choices"></div>
+    <div id="status-wrap" style="display:none"></div>
+    <div id="reveal-wrap"></div>
+  </div>
+</div>
+
+<!-- SCORE -->
+<div id="page-score" class="page">
+  <div class="score-ring" id="score-ring">
+    <div class="score-big" id="s-num">0</div>
+    <div class="score-of" id="s-of">/ 0</div>
+  </div>
+  <div class="score-title" id="s-title"></div>
+  <div class="score-sub" id="s-sub"></div>
+  <div class="score-btns">
+    <button class="btn btn-primary" onclick="restartSame()">🔄 ทำใหม่</button>
+    <button class="btn btn-outline" onclick="showMain('home')">🏠 หน้าหลัก</button>
+  </div>
+  <div class="review-section" id="review-section" style="max-width:780px;margin:0 auto;padding:0 1.5rem 2rem"></div>
+</div>
+
+<!-- BOOK VIEWER PAGE -->
+<div id="page-book" class="page">
+  <div class="page-inner">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;flex-wrap:wrap">
+      <button class="btn btn-ghost" onclick="showMain('library')">← กลับ</button>
+      <div style="flex:1">
+        <div class="section-title" id="book-view-title"></div>
+        <div class="section-sub" id="book-view-meta" style="margin-bottom:0"></div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="openAddPages()">+ เพิ่มไฟล์</button>
+      <button class="btn btn-danger btn-sm" id="book-del-btn">🗑 ลบแฟ้ม</button>
+    </div>
+    <div id="book-pages-grid" class="lib-grid"></div>
+  </div>
+</div>
+
+<!-- ====== MODALS ====== -->
+
+<!-- TOPIC MODAL with emoji picker -->
+<div class="modal-overlay" id="topic-modal">
+  <div class="modal" style="max-width:520px">
+    <h3 id="topic-modal-title">เพิ่มหัวข้อ</h3>
+    <label>ชื่อหัวข้อ</label>
+    <input type="text" id="tm-name" placeholder="เช่น กลศาสตร์ของไหล">
+
+    <label>ไอคอน</label>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem">
+      <div id="tm-icon-preview" style="font-size:2rem;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:var(--surface2);border:1px solid var(--border);border-radius:10px;cursor:pointer" onclick="toggleEmojiPicker()">⚙️</div>
+      <input type="text" id="tm-icon" placeholder="⚙️" style="width:90px;font-size:1.2rem;margin-bottom:0" oninput="document.getElementById('tm-icon-preview').textContent=this.value||'⚙️'">
+      <button class="btn btn-outline btn-sm" onclick="toggleEmojiPicker()">เลือก emoji</button>
+    </div>
+
+    <!-- EMOJI PICKER -->
+    <div id="emoji-picker" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:1rem">
+      <input type="text" id="emoji-search" placeholder="🔍 ค้นหา emoji..." style="margin-bottom:8px;font-size:.85rem" oninput="filterEmoji(this.value)">
+      <div id="emoji-cats" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">
+        <button class="ebtn active" onclick="showEmojiCat('all',this)">ทั้งหมด</button>
+        <button class="ebtn" onclick="showEmojiCat('tech',this)">⚙️ เทคนิค</button>
+        <button class="ebtn" onclick="showEmojiCat('science',this)">🔬 วิทย์</button>
+        <button class="ebtn" onclick="showEmojiCat('nature',this)">🌊 ธรรมชาติ</button>
+        <button class="ebtn" onclick="showEmojiCat('symbol',this)">🔢 สัญลักษณ์</button>
+        <button class="ebtn" onclick="showEmojiCat('other',this)">😊 อื่นๆ</button>
+      </div>
+      <div id="emoji-grid" style="display:flex;flex-wrap:wrap;gap:4px;max-height:180px;overflow-y:auto"></div>
+    </div>
+
+    <label style="margin-bottom:8px">สีหัวข้อ</label>
+    <div class="color-row" id="color-row"></div>
+    <div class="flex" style="margin-top:.5rem">
+      <button class="btn btn-primary" onclick="saveTopic()">บันทึก</button>
+      <button class="btn btn-outline" onclick="cm('topic-modal')">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT MODAL - single page: JSON + per-question image attach -->
+<div class="modal-overlay" id="import-modal">
+  <div class="modal" style="max-width:700px">
+    <h3>📥 นำเข้าข้อสอบ — <span id="imp-topic-name" style="color:var(--accent)"></span></h3>
+
+    <!-- JSON section -->
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:1rem">
+      <div style="font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:8px">📋 JSON ข้อสอบ</div>
+      <div class="codehint" style="margin-bottom:8px">[{"q":"โจทย์...","a":["ก....","ข....","ค....","ง...."],"ans":0,"expl":"คำอธิบาย"}]</div>
+      <textarea id="imp-json" placeholder='[{"q":"...","a":["ก....","ข....","ค....","ง...."],"ans":0}]' style="min-height:80px;margin-bottom:8px" oninput="impAutoPreview()"></textarea>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <label style="margin-bottom:0;font-size:.8rem">หรืออัพโหลดไฟล์ .json</label>
+        <input type="file" id="imp-file" accept=".json" onchange="loadJSONFile()" style="color:var(--muted);margin-bottom:0;flex:1">
+      </div>
+    </div>
+
+    <!-- Per-question image attach (auto-renders after JSON is valid) -->
+    <div id="imp-q-section" style="display:none;margin-bottom:1rem">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:.6rem;flex-wrap:wrap">
+        <div style="font-size:.82rem;font-weight:600">🖼 แนบรูปภาพ</div>
+        <span id="imp-q-count" style="font-size:.75rem;color:var(--muted);font-family:var(--mono)"></span>
+      </div>
+      <div id="imp-q-list" style="max-height:45vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+
+    <!-- invalid notice -->
+    <div id="imp-invalid-notice" style="display:none;font-size:.8rem;color:var(--red);margin-bottom:.75rem"></div>
+
+    <div class="flex">
+      <button class="btn btn-primary" onclick="doImport()">💾 นำเข้า</button>
+      <button class="btn btn-ghost" onclick="cm('import-modal')">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT QUESTION MODAL -->
+<div class="modal-overlay" id="editq-modal" style="z-index:600">
+  <div class="modal" style="max-width:620px">
+    <h3>✏️ แก้ไขข้อสอบ</h3>
+    <label>โจทย์</label><textarea id="eq-q" style="min-height:70px"></textarea>
+    <label>ตัวเลือก ก.</label><input type="text" id="eq-a0">
+    <label>ตัวเลือก ข.</label><input type="text" id="eq-a1">
+    <label>ตัวเลือก ค.</label><input type="text" id="eq-a2">
+    <label>ตัวเลือก ง.</label><input type="text" id="eq-a3">
+    <label>ตัวเลือก จ. (ไม่บังคับ)</label><input type="text" id="eq-a4" placeholder="ถ้าไม่ใช้ให้เว้นว่าง">
+    <label>คำตอบที่ถูก</label>
+    <select id="eq-ans" style="margin-bottom:1rem"><option value="0">ก.</option><option value="1">ข.</option><option value="2">ค.</option><option value="3">ง.</option><option value="4">จ.</option></select>
+    <label>รูปภาพโจทย์</label>
+    <div class="img-zone" onclick="tf('eq-img-q-file')"><div id="eq-img-q-lbl">📷 คลิกเปลี่ยนรูปโจทย์</div><img id="eq-img-q-prev" class="img-prev"></div>
+    <input type="file" id="eq-img-q-file" accept="image/*" style="display:none" onchange="prevImg(this,'eq-img-q-prev','eq-img-q-lbl','_eqImgQ')">
+    <div style="display:flex;gap:6px;margin-bottom:.75rem">
+      <button class="btn btn-danger btn-sm" onclick="clearEqImg('q')">🗑 ลบรูปโจทย์</button>
+    </div>
+    <label>รูปภาพเฉลย</label>
+    <div class="img-zone" onclick="tf('eq-img-ans-file')"><div id="eq-img-ans-lbl">🖼 คลิกเปลี่ยนรูปเฉลย</div><img id="eq-img-ans-prev" class="img-prev"></div>
+    <input type="file" id="eq-img-ans-file" accept="image/*" style="display:none" onchange="prevImg(this,'eq-img-ans-prev','eq-img-ans-lbl','_eqImgAns')">
+    <div style="display:flex;gap:6px;margin-bottom:.75rem">
+      <button class="btn btn-danger btn-sm" onclick="clearEqImg('ans')">🗑 ลบรูปเฉลย</button>
+    </div>
+    <label>คำอธิบาย</label>
+    <textarea id="eq-expl" style="min-height:55px"></textarea>
+    <div class="flex" style="margin-top:.5rem">
+      <button class="btn btn-primary" onclick="saveEditQ()">💾 บันทึก</button>
+      <button class="btn btn-danger" onclick="deleteEditQ()">🗑 ลบข้อนี้</button>
+      <button class="btn btn-outline" onclick="cm('editq-modal')">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD SINGLE QUESTION -->
+<div class="modal-overlay" id="addq-modal">
+  <div class="modal">
+    <h3>➕ เพิ่มข้อสอบ — <span id="addq-topic-name" style="color:var(--accent)"></span></h3>
+    <label>โจทย์</label><textarea id="aq-q" placeholder="พิมพ์โจทย์..." style="min-height:70px"></textarea>
+    <label>ตัวเลือก ก.</label><input type="text" id="aq-a0" placeholder="ตัวเลือก ก.">
+    <label>ตัวเลือก ข.</label><input type="text" id="aq-a1" placeholder="ตัวเลือก ข.">
+    <label>ตัวเลือก ค.</label><input type="text" id="aq-a2" placeholder="ตัวเลือก ค.">
+    <label>ตัวเลือก ง.</label><input type="text" id="aq-a3" placeholder="ตัวเลือก ง.">
+    <label>ตัวเลือก จ. (ไม่บังคับ)</label><input type="text" id="aq-a4" placeholder="ถ้าไม่ใช้ให้เว้นว่าง">
+    <label>คำตอบที่ถูก</label>
+    <select id="aq-ans" style="margin-bottom:1rem"><option value="0">ก.</option><option value="1">ข.</option><option value="2">ค.</option><option value="3">ง.</option><option value="4">จ.</option></select>
+    <label>รูปภาพโจทย์ (ไม่บังคับ)</label>
+    <div class="img-zone" onclick="tf('aq-img-q-file')"><div id="aq-img-q-lbl">📷 คลิกอัพโหลดรูปโจทย์</div><img id="aq-img-q-prev" class="img-prev"></div>
+    <input type="file" id="aq-img-q-file" accept="image/*" style="display:none" onchange="prevImg(this,'aq-img-q-prev','aq-img-q-lbl','_aqImgQ')">
+    <label>รูปภาพเฉลย (ไม่บังคับ)</label>
+    <div class="img-zone" onclick="tf('aq-img-ans-file')"><div id="aq-img-ans-lbl">🖼 คลิกอัพโหลดรูปเฉลย</div><img id="aq-img-ans-prev" class="img-prev"></div>
+    <input type="file" id="aq-img-ans-file" accept="image/*" style="display:none" onchange="prevImg(this,'aq-img-ans-prev','aq-img-ans-lbl','_aqImgAns')">
+    <label style="margin-top:.5rem">คำอธิบาย (ไม่บังคับ)</label>
+    <textarea id="aq-expl" placeholder="วิธีทำ..." style="min-height:55px"></textarea>
+    <div class="flex"><button class="btn btn-primary" onclick="addSingleQ()">+ เพิ่มข้อนี้</button><button class="btn btn-outline" onclick="cm('addq-modal')">ปิด</button></div>
+  </div>
+</div>
+
+<!-- START QUIZ -->
+<div class="modal-overlay" id="start-modal">
+  <div class="modal" style="max-width:680px">
+    <h3 id="start-title"></h3>
+    <p id="start-meta" style="margin-bottom:1rem"></p>
+    <label style="margin-bottom:8px">เลือกโหมด</label>
+    <div class="mode-grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="mode-card selected" onclick="selMode('all',this)"><div class="mode-icon">📚</div><div class="mode-name">ทุกข้อ</div><div class="mode-desc">เรียงลำดับ</div></div>
+      <div class="mode-card" onclick="selMode('rand',this)"><div class="mode-icon">🔀</div><div class="mode-name">สุ่ม</div><div class="mode-desc">ไม่ซ้ำ</div></div>
+      <div class="mode-card" onclick="selMode('n',this)"><div class="mode-icon">🎯</div><div class="mode-name">เลือกจำนวน</div><div class="mode-desc">กำหนดเอง</div></div>
+      <div class="mode-card" onclick="selMode('pick',this)"><div class="mode-icon">☑️</div><div class="mode-name">เลือกข้อ</div><div class="mode-desc">เลือกเอง</div></div>
+    </div>
+    <div id="n-row" style="display:none;margin-bottom:1rem"><label>จำนวนข้อ</label><input type="text" id="n-count" value="20" style="width:90px"></div>
+    <!-- pick mode: checklist -->
+    <div id="pick-row" style="display:none;margin-bottom:1rem">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+        <span style="font-size:.82rem;color:var(--muted)" id="pick-selected-count">เลือก 0 ข้อ</span>
+        <button class="btn btn-outline btn-sm" onclick="pickSelectAll(true)">เลือกทั้งหมด</button>
+        <button class="btn btn-outline btn-sm" onclick="pickSelectAll(false)">ยกเลิกทั้งหมด</button>
+        <button class="btn btn-outline btn-sm" onclick="pickSelectUndone()">เฉพาะยังไม่ได้ทำ</button>
+      </div>
+      <div id="pick-list" style="max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:5px"></div>
+    </div>
+    <div class="flex"><button class="btn btn-primary" onclick="beginQuiz()">▶ เริ่มทำข้อสอบ</button><button class="btn btn-outline" onclick="cm('start-modal')">ยกเลิก</button></div>
+  </div>
+</div>
+
+<!-- DOCS MODAL -->
+<div class="modal-overlay" id="docs-modal">
+  <div class="modal docs-modal">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px">
+      <h3 style="margin:0">📄 เอกสาร — <span id="docs-topic-name" style="color:var(--accent)"></span></h3>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-primary btn-sm" onclick="tf('doc-img-input')">🖼 รูปภาพ</button>
+        <button class="btn btn-yellow btn-sm" onclick="tf('doc-pdf-input')">📄 PDF</button>
+        <button class="btn btn-ghost btn-sm" onclick="cm('docs-modal')">✕</button>
+      </div>
+    </div>
+    <p style="margin-bottom:.75rem">รองรับ JPG/PNG/WEBP และ PDF — เลือกหลายไฟล์พร้อมกันได้</p>
+    <input type="file" id="doc-img-input" accept="image/jpeg,image/png,image/webp,image/gif" multiple style="display:none" onchange="uploadDocs(this,'image')">
+    <input type="file" id="doc-pdf-input" accept="application/pdf" multiple style="display:none" onchange="uploadDocs(this,'pdf')">
+    <div id="docs-empty" style="color:var(--muted);text-align:center;padding:2rem;display:none">ยังไม่มีเอกสาร</div>
+    <div id="docs-grid" class="docs-grid"></div>
+  </div>
+</div>
+
+<!-- PDF VIEWER MODAL -->
+<div class="modal-overlay" id="pdf-viewer-modal">
+  <div class="modal pdf-viewer-modal">
+    <div class="pdf-nav">
+      <button class="btn btn-ghost" onclick="cm('pdf-viewer-modal')">✕ ปิด</button>
+      <span id="pdf-name" style="font-size:.88rem;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+      <button class="btn btn-outline btn-sm" onclick="pdfPrev()">◀</button>
+      <span class="pdf-page-info" id="pdf-page-info">1 / 1</span>
+      <button class="btn btn-outline btn-sm" onclick="pdfNext()">▶</button>
+      <button class="btn btn-outline btn-sm" onclick="pdfZoomOut()">−</button>
+      <button class="btn btn-outline btn-sm" onclick="pdfZoomIn()">+</button>
+    </div>
+    <div id="pdf-canvas-wrap"><canvas id="pdf-canvas"></canvas></div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE TOPIC -->
+<div class="modal-overlay" id="del-topic-modal">
+  <div class="modal" style="max-width:420px">
+    <h3>🗑 ยืนยันลบหัวข้อ</h3>
+    <p id="del-topic-msg"></p>
+    <div class="flex"><button class="btn btn-danger" onclick="doDeleteTopic()">ยืนยันลบ</button><button class="btn btn-outline" onclick="cm('del-topic-modal')">ยกเลิก</button></div>
+  </div>
+</div>
+
+<!-- EXIT QUIZ -->
+<div class="modal-overlay" id="exit-modal">
+  <div class="modal" style="max-width:380px">
+    <h3>ออกจากข้อสอบ?</h3>
+    <p>คะแนนจะไม่ถูกบันทึก</p>
+    <div class="flex"><button class="btn btn-danger" onclick="forceExit()">ออก</button><button class="btn btn-outline" onclick="cm('exit-modal')">ทำต่อ</button></div>
+  </div>
+</div>
+
+<!-- ADD BOOK -->
+<div class="modal-overlay" id="add-book-modal">
+  <div class="modal">
+    <h3>📁 เพิ่มแฟ้มใหม่</h3>
+    <label>ชื่อแฟ้ม / หนังสือ</label><input type="text" id="bk-name" placeholder="เช่น Shigley's Mechanical Engineering">
+    <label>รายละเอียด</label><input type="text" id="bk-desc" placeholder="ผู้แต่ง / บันทึก">
+    <label>รูปปก (ไม่บังคับ)</label>
+    <div class="img-zone" onclick="tf('bk-cover-file')"><div id="bk-cover-lbl">📷 อัพโหลดรูปปก</div><img id="bk-cover-prev" class="img-prev"></div>
+    <input type="file" id="bk-cover-file" accept="image/*" style="display:none" onchange="prevImg(this,'bk-cover-prev','bk-cover-lbl','_bkCover')">
+    <div class="flex"><button class="btn btn-primary" onclick="saveBook()">บันทึก</button><button class="btn btn-outline" onclick="cm('add-book-modal')">ยกเลิก</button></div>
+  </div>
+</div>
+
+<!-- ADD FILES (all types) -->
+<div class="modal-overlay" id="add-pages-modal">
+  <div class="modal" style="max-width:580px">
+    <h3>📁 เพิ่มไฟล์ — <span id="ap-book-name" style="color:var(--accent)"></span></h3>
+    <p style="margin-bottom:1rem;font-size:.85rem">รองรับรูปภาพ, PDF, Word, Excel, PowerPoint — เลือกหลายไฟล์พร้อมกันได้</p>
+
+    <!-- file type buttons -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem">
+      <button class="btn btn-outline btn-sm" onclick="tf('ap-img-files')">🖼 รูปภาพ</button>
+      <button class="btn btn-outline btn-sm" style="color:var(--red);border-color:rgba(248,81,73,.4)" onclick="tf('ap-pdf-files')">📄 PDF</button>
+      <button class="btn btn-outline btn-sm" style="color:#2b7cd3;border-color:rgba(43,124,211,.4)" onclick="tf('ap-word-files')">📝 Word</button>
+      <button class="btn btn-outline btn-sm" style="color:var(--green);border-color:rgba(63,185,80,.4)" onclick="tf('ap-excel-files')">📊 Excel</button>
+      <button class="btn btn-outline btn-sm" style="color:#d04423;border-color:rgba(208,68,35,.4)" onclick="tf('ap-ppt-files')">📑 PowerPoint</button>
+    </div>
+
+    <input type="file" id="ap-img-files"   accept="image/*"   multiple style="display:none" onchange="addToPageQueue(this,'image')">
+    <input type="file" id="ap-pdf-files"   accept=".pdf"      multiple style="display:none" onchange="addToPageQueue(this,'pdf')">
+    <input type="file" id="ap-word-files"  accept=".doc,.docx" multiple style="display:none" onchange="addToPageQueue(this,'word')">
+    <input type="file" id="ap-excel-files" accept=".xls,.xlsx" multiple style="display:none" onchange="addToPageQueue(this,'excel')">
+    <input type="file" id="ap-ppt-files"   accept=".ppt,.pptx" multiple style="display:none" onchange="addToPageQueue(this,'ppt')">
+
+    <div id="ap-queue-info" style="font-size:.82rem;color:var(--muted);margin-bottom:.75rem;display:none"></div>
+    <div id="ap-previews" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;max-height:220px;overflow-y:auto;margin-bottom:1rem"></div>
+
+    <div class="flex">
+      <button class="btn btn-primary" onclick="savePages()">💾 บันทึกทั้งหมด</button>
+      <button class="btn btn-outline" onclick="clearPageQueue()">ล้างรายการ</button>
+      <button class="btn btn-ghost" onclick="cm('add-pages-modal')">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW/EDIT QUESTIONS MODAL -->
+<div class="modal-overlay" id="viewqs-modal">
+  <div class="modal" style="max-width:760px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px">
+      <h3 style="margin:0">📝 ข้อสอบ — <span id="vq-topic-name" style="color:var(--accent)"></span></h3>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <input type="text" id="vq-search" placeholder="🔍 ค้นหา..." style="width:140px;margin-bottom:0;font-size:.82rem" oninput="filterViewQs()">
+        <span id="vq-count" style="font-size:.78rem;color:var(--muted);font-family:var(--mono)"></span>
+        <button class="btn btn-ghost btn-sm" onclick="cm('viewqs-modal')">✕</button>
+      </div>
+    </div>
+    <!-- info bar -->
+    <div style="display:flex;gap:10px;margin-bottom:.75rem;flex-wrap:wrap;align-items:center">
+      <span id="vq-done-count" style="font-size:.8rem;color:var(--muted)"></span>
+      <button class="btn btn-outline btn-sm" onclick="toggleVqMode()" id="vq-mode-btn">🔀 เปิดโหมดเรียงลำดับ</button>
+      <button class="btn btn-outline btn-sm" onclick="resetQProgress()">🔄 รีเซ็ตสถานะ</button>
+    </div>
+    <div id="vq-list" style="max-height:60vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px"></div>
+    <!-- bottom action for reorder save -->
+    <div id="vq-reorder-bar" style="display:none;margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border)">
+      <div style="font-size:.8rem;color:var(--muted);margin-bottom:6px">ลากแถบ ⠿ เพื่อเรียงลำดับข้อสอบ</div>
+      <button class="btn btn-primary btn-sm" onclick="saveQOrder()">💾 บันทึกลำดับ</button>
+    </div>
+  </div>
+</div>
+
+<!-- IMAGE LIGHTBOX -->
+<div id="lightbox" onclick="closeLB()">
+  <button id="lb-close" onclick="closeLB()">✕ ปิด</button>
+  <img id="lb-img" src="" alt="">
+</div>
+
+<div id="toast"></div>
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <div id="loading-msg">กำลังโหลด...</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+// ── PDF.js worker ──────────────────────────────────────────
+if (typeof pdfjsLib !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
+// ── IndexedDB ──────────────────────────────────────────────
+// ── Firebase Config ────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyBMcZW9XqfIiF08qLNF8N1U9TkNOxrVfEo",
+  authDomain: "kaw-quiz.firebaseapp.com",
+  projectId: "kaw-quiz",
+  storageBucket: "kaw-quiz.firebasestorage.app",
+  messagingSenderId: "371562350298",
+  appId: "1:371562350298:web:46de38971e6125202ec7e3"
+};
+
+// ── Firebase DB Layer (replaces IndexedDB) ─────────────────
+// ใช้ Firestore เก็บข้อมูลบน Cloud — sync ข้ามอุปกรณ์
+let _db = null, _auth = null, _uid = null;
+
+async function openDB() {
+  // Load Firebase SDK
+  await loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');
+  await loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js');
+  await loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js');
+
+  firebase.initializeApp(firebaseConfig);
+  _auth = firebase.auth();
+  _db   = firebase.firestore();
+
+  // Sign in anonymously — ให้แต่ละเครื่องมี uid เดียวกันถ้า login ด้วย Google
+  await new Promise((res, rej) => {
+    _auth.onAuthStateChanged(async user => {
+      if (user) {
+        _uid = user.uid;
+        res();
+      } else {
+        try {
+          const cred = await _auth.signInAnonymously();
+          _uid = cred.user.uid;
+          res();
+        } catch(e) { rej(e); }
+      }
+    });
+  });
+}
+
+function loadScript(src) {
+  return new Promise((res, rej) => {
+    if (document.querySelector(`script[src="${src}"]`)) { res(); return; }
+    const s = document.createElement('script');
+    s.src = src; s.onload = res; s.onerror = rej;
+    document.head.appendChild(s);
+  });
+}
+
+// ── Firestore helpers (same API as IndexedDB layer) ────────
+// ── Firestore collections ──────────────────────────────────
+// ทุก store เก็บแยกตาม user — ข้อมูลแต่ละ account เป็นอิสระ
+// สถิติแยกตาม account อยู่แล้ว
+const SHARED_STORES = []; // ไม่มี shared store (ใช้ per-user ทั้งหมด)
+
+function col(store) {
+  return _db.collection('users').doc(_uid).collection(store);
+}
+
+async function dbGetAll(store) {
+  const snap = await col(store).get();
+  return snap.docs.map(d => ({ ...d.data(), _docId: d.id }));
+}
+
+async function dbGetIdx(store, field, value) {
+  const snap = await col(store).where(field, '==', value).get();
+  return snap.docs.map(d => ({ ...d.data(), _docId: d.id }));
+}
+
+async function dbCntIdx(store, field, value) {
+  const snap = await col(store).where(field, '==', value).get();
+  return snap.size;
+}
+
+async function dbPut(store, obj) {
+  const key = obj._docId || obj.id || obj.date;
+  if (!key) throw new Error('dbPut: no key for ' + store);
+  const data = { ...obj };
+  delete data._docId;
+  await col(store).doc(String(key)).set(data, { merge: true });
+  return obj;
+}
+
+async function dbAdd(store, obj) {
+  const data = { ...obj };
+  delete data._docId;
+  if (store === 'questions' || store === 'pages' || store === 'topicdocs') {
+    const ref = await col(store).add(data);
+    obj.id = ref.id; obj._docId = ref.id;
+    return ref.id;
+  }
+  const key = obj.id || obj.date;
+  await col(store).doc(String(key)).set(data, { merge: true });
+  return key;
+}
+
+async function dbDel(store, key) {
+  await col(store).doc(String(key)).delete();
+}
+
+// ── State ──────────────────────────────────────────────────
+const COLORS = ['#388bfd','#3fb950','#f85149','#d29922','#a371f7','#f78166','#39d3c3','#ff6b9d'];
+const DEF_TOPICS = [
+  {id:'t1',name:'กลศาสตร์ของแข็ง',   icon:'🔧',color:'#388bfd'},
+  {id:'t2',name:'กลศาสตร์ของไหล',    icon:'💧',color:'#39d3c3'},
+  {id:'t3',name:'เทอร์โมไดนามิกส์',  icon:'🔥',color:'#f85149'},
+  {id:'t4',name:'การออกแบบเครื่องจักร',icon:'⚙️',color:'#a371f7'},
+  {id:'t5',name:'วัสดุวิศวกรรม',      icon:'🏗️',color:'#d29922'},
+  {id:'t6',name:'การสั่นสะเทือน',     icon:'〰️',color:'#f78166'},
+  {id:'t7',name:'การควบคุมอัตโนมัติ', icon:'⚡',color:'#3fb950'},
+  {id:'t8',name:'วิศวกรรมการผลิต',   icon:'🔩',color:'#ff6b9d'},
+];
+
+let topics = [], sessionDone = 0;
+let quizState = null, quizMode = 'all';
+let pendingTopicId = null, editTopicId = null, delTopicId = null;
+let selectedColor = COLORS[0];
+let currentBookId = null, currentDocTopicId = null;
+// img upload temps — ต้องเป็น var เพื่อให้ window[varName] ใน prevImg ทำงานได้
+var _aqImgQ=null, _aqImgAns=null, _bkCover=null, _eqImgQ=null, _eqImgAns=null;
+// PDF viewer state
+let pdfDoc=null, pdfPage=1, pdfZoom=1.4, pdfDocId=null;
+
+// ── Init ───────────────────────────────────────────────────
+async function init() {
+  showLoad('กำลังเชื่อมต่อ Firebase...');
+  try {
+    await openDB();
+  } catch(e) {
+    console.error('Firebase error:', e);
+    showLoad('⚠ เชื่อมต่อไม่ได้ — กำลังใช้งาน offline...');
+    await new Promise(r=>setTimeout(r,1500));
+  }
+  topics = await dbGetAll('topics').catch(()=>[]);
+  if (!topics.length) { for (const t of DEF_TOPICS) await dbPut('topics',t).catch(()=>{}); topics=[...DEF_TOPICS]; }
+  topics.sort((a,b)=>(a.order??999)-(b.order??999));
+  renderColorRow();
+  renderUserStatus();
+  await renderHome();
+  hideLoad();
+}
+
+function renderUserStatus() {
+  const user = _auth?.currentUser;
+  const nav = document.getElementById('nav-user');
+  if (!nav) return;
+  if (user && !user.isAnonymous) {
+    nav.innerHTML=`<div style="display:flex;align-items:center;gap:8px">
+      <img src="${user.photoURL||''}" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--green)" onerror="this.style.display='none'">
+      <span style="font-size:.78rem;color:var(--green);font-weight:600">${user.displayName||user.email||'Signed in'}</span>
+      <button class="btn btn-ghost btn-sm" onclick="signOut()" style="font-size:.72rem">ออก</button>
+    </div>`;
+  } else {
+    nav.innerHTML=`<button class="btn btn-outline btn-sm" onclick="signInGoogle()" style="font-size:.78rem;gap:6px">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:14px;height:14px"> Sync ข้ามอุปกรณ์
+    </button>`;
+  }
+}
+
+async function signInGoogle() {
+  try {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    await _auth.signInWithPopup(provider);
+    _uid = _auth.currentUser.uid;
+    renderUserStatus();
+    showLoad('กำลังโหลดข้อมูล...');
+    topics = await dbGetAll('topics').catch(()=>[]);
+    if (!topics.length) { for (const t of DEF_TOPICS) await dbPut('topics',t).catch(()=>{}); topics=[...DEF_TOPICS]; }
+    topics.sort((a,b)=>(a.order??999)-(b.order??999));
+    await renderHome(); hideLoad();
+    toast('เข้าสู่ระบบแล้ว ✓ ข้อมูล sync แล้ว','ok');
+  } catch(e) { console.error(e); toast('เข้าสู่ระบบไม่สำเร็จ','err'); }
+}
+
+async function signOut() {
+  await _auth.signOut();
+  location.reload();
+}
+
+// ── Page nav ───────────────────────────────────────────────
+const PAGES = ['home','library','stats','quiz','score','book'];
+function showPage(id) {
+  PAGES.forEach(p => document.getElementById('page-'+p).classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+}
+function showMain(id) {
+  showPage(id);
+  document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',
+    (id==='home'&&i===0)||(id==='library'&&i===1)||(id==='stats'&&i===2)));
+  if (id==='home') renderHome();
+  if (id==='library') renderLibrary();
+  if (id==='stats') renderStats();
+}
+
+// ── Home ───────────────────────────────────────────────────
+async function renderHome() {
+  const counts = {};
+  for (const t of topics) counts[t.id] = await dbCntIdx('questions','topicId',t.id);
+  const total = Object.values(counts).reduce((a,b)=>a+b,0);
+  document.getElementById('st-topics').textContent  = topics.length;
+  document.getElementById('st-total').textContent   = total.toLocaleString();
+  document.getElementById('st-session').textContent = sessionDone;
+
+  document.getElementById('topics-grid').innerHTML = topics.map(t=>`
+    <div class="topic-card" id="tc_${t.id}" style="--tc:${t.color}"
+      draggable="true"
+      ondragstart="onDragStart(event,'${t.id}')"
+      ondragover="onDragOver(event,'${t.id}')"
+      ondragend="onDragEnd(event)"
+      ondrop="onDrop(event,'${t.id}')"
+      onclick="handleCardClick(event,'${t.id}')">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:.3rem">
+        <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
+          <div class="drag-handle" title="ลากเพื่อเรียงลำดับ" onclick="event.stopPropagation()">⠿</div>
+          <div class="topic-icon" style="margin-bottom:0;font-size:1.4rem">${t.icon}</div>
+        </div>
+        <!-- 3-dot menu -->
+        <div class="topic-mnu-wrap" onclick="event.stopPropagation()">
+          <button class="topic-mnu-btn" onclick="toggleTopicMenu('${t.id}',event)" title="ตัวเลือก">⋯</button>
+          <div class="topic-mnu-dropdown" id="mnu_${t.id}">
+            <button class="topic-mnu-item" onclick="closeAllMenus();openViewQs('${t.id}')">📝 ดู/แก้ไขข้อสอบ</button>
+            <button class="topic-mnu-item" onclick="closeAllMenus();openEditTopic('${t.id}')">✏️ แก้ไขหัวข้อ</button>
+            <button class="topic-mnu-item danger" onclick="closeAllMenus();askDelTopic('${t.id}')">🗑 ลบ</button>
+          </div>
+        </div>
+      </div>
+      <div class="topic-name" style="padding-left:28px">${x(t.name)}</div>
+      <div class="topic-meta" style="padding-left:28px">${(counts[t.id]||0).toLocaleString()} ข้อ</div>
+      <!-- quick action row (นำเข้า, เพิ่มข้อ, เอกสาร) -->
+      <div class="topic-btns" style="grid-template-columns:1fr 1fr 1fr;margin-top:.8rem" onclick="event.stopPropagation()">
+        <button class="tbtn" onclick="openImport('${t.id}')">📥 นำเข้า</button>
+        <button class="tbtn" onclick="openAddQ('${t.id}')">➕ เพิ่มข้อ</button>
+        <button class="tbtn tdoc" onclick="openDocs('${t.id}')">📄 เอกสาร</button>
+      </div>
+    </div>`).join('') +
+    `<div class="topic-add-card" onclick="openNewTopic()">
+      <div style="font-size:2rem;opacity:.35">+</div>
+      <div style="font-size:.88rem">เพิ่มหัวข้อ</div>
+    </div>`;
+  initDrag();
+}
+
+// ── Topic CRUD ─────────────────────────────────────────────
+function renderColorRow() {
+  document.getElementById('color-row').innerHTML = COLORS.map(c=>
+    `<div class="cdot${c===selectedColor?' selected':''}" style="background:${c}" onclick="pickColor('${c}',this)"></div>`).join('');
+}
+function pickColor(c,el) {
+  selectedColor=c;
+  document.querySelectorAll('.cdot').forEach(d=>d.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function openNewTopic() {
+  editTopicId=null;
+  document.getElementById('topic-modal-title').textContent='เพิ่มหัวข้อ';
+  document.getElementById('tm-name').value='';
+  document.getElementById('tm-icon').value='⚙️';
+  document.getElementById('tm-icon-preview').textContent='⚙️';
+  document.getElementById('emoji-picker').style.display='none';
+  selectedColor=COLORS[topics.length%COLORS.length];
+  renderColorRow(); om('topic-modal');
+}
+function openEditTopic(id) {
+  const t=topics.find(v=>v.id===id);
+  editTopicId=id;
+  document.getElementById('topic-modal-title').textContent='แก้ไขหัวข้อ';
+  document.getElementById('tm-name').value=t.name;
+  document.getElementById('tm-icon').value=t.icon;
+  document.getElementById('tm-icon-preview').textContent=t.icon;
+  document.getElementById('emoji-picker').style.display='none';
+  selectedColor=t.color;
+  renderColorRow(); om('topic-modal');
+}
+async function saveTopic() {
+  const name=document.getElementById('tm-name').value.trim();
+  const icon=document.getElementById('tm-icon').value.trim()||'⚙️';
+  if (!name){toast('กรุณาใส่ชื่อหัวข้อ','err');return;}
+  if (editTopicId) {
+    const t=topics.find(v=>v.id===editTopicId);
+    Object.assign(t,{name,icon,color:selectedColor});
+    await dbPut('topics',t);
+  } else {
+    const t={id:'tp_'+Date.now(),name,icon,color:selectedColor};
+    topics.push(t); await dbPut('topics',t);
+  }
+  cm('topic-modal'); await renderHome(); toast('บันทึกแล้ว ✓','ok');
+}
+function askDelTopic(id) {
+  delTopicId=id;
+  const t=topics.find(v=>v.id===id);
+  document.getElementById('del-topic-msg').textContent=
+    `ลบหัวข้อ "${t.name}" หรือไม่? ข้อสอบและเอกสารทั้งหมดจะถูกลบถาวร`;
+  om('del-topic-modal');
+}
+async function doDeleteTopic() {
+  cm('del-topic-modal'); showLoad('กำลังลบ...');
+  const id=delTopicId;
+  const qs=await dbGetIdx('questions','topicId',id);
+  for (const q of qs) await dbDel('questions',q.id);
+  const ds=await dbGetIdx('topicdocs','topicId',id).catch(()=>[]);
+  for (const d of ds) await dbDel('topicdocs',d.id).catch(()=>{});
+  await dbDel('topics',id);
+  topics=topics.filter(v=>v.id!==id);
+  // clean stats: remove byTopic entry for deleted topic
+  const allStats=await dbGetAll('dailystats');
+  for (const rec of allStats) {
+    if (rec.byTopic && rec.byTopic[id]) {
+      delete rec.byTopic[id];
+      await dbPut('dailystats', rec);
+    }
+  }
+  hideLoad(); await renderHome(); toast('ลบหัวข้อแล้ว','ok');
+}
+
+// ── Add single Q ───────────────────────────────────────────
+function openAddQ(tid) {
+  pendingTopicId=tid;
+  document.getElementById('addq-topic-name').textContent=topics.find(v=>v.id===tid).name;
+  ['aq-q','aq-a0','aq-a1','aq-a2','aq-a3','aq-a4','aq-expl'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('aq-ans').value='0';
+  clrImg('aq-img-q-prev','aq-img-q-lbl','📷 คลิกอัพโหลดรูปโจทย์','_aqImgQ');
+  clrImg('aq-img-ans-prev','aq-img-ans-lbl','🖼 คลิกอัพโหลดรูปเฉลย','_aqImgAns');
+  om('addq-modal');
+}
+async function addSingleQ() {
+  const q=document.getElementById('aq-q').value.trim();
+  const a=[0,1,2,3].map(i=>document.getElementById('aq-a'+i).value.trim());
+  const a4=document.getElementById('aq-a4').value.trim();
+  if (a4) a.push(a4); // เพิ่ม จ. ถ้ามีการกรอก
+  if (!q){toast('กรุณาใส่โจทย์','err');return;}
+  if (a.slice(0,4).some(v=>!v)){toast('กรุณาใส่ตัวเลือก ก.-ง. ให้ครบ','err');return;}
+  const imgQ  = getImg('_aqImgQ')  || '';
+  const imgAns= getImg('_aqImgAns') || '';
+  await dbAdd('questions',{q,a,
+    ans:parseInt(document.getElementById('aq-ans').value),
+    expl:document.getElementById('aq-expl').value.trim(),
+    img_q:imgQ, img_ans:imgAns,
+    addedAt:Date.now(),
+    topicId:pendingTopicId});
+  ['aq-q','aq-a0','aq-a1','aq-a2','aq-a3','aq-a4','aq-expl'].forEach(id=>document.getElementById(id).value='');
+  clrImg('aq-img-q-prev','aq-img-q-lbl','📷 คลิกอัพโหลดรูปโจทย์','_aqImgQ');
+  clrImg('aq-img-ans-prev','aq-img-ans-lbl','🖼 คลิกอัพโหลดรูปเฉลย','_aqImgAns');
+  await renderHome(); toast('เพิ่มข้อสอบแล้ว ✓','ok');
+}
+
+// ── Start quiz ─────────────────────────────────────────────
+let _startQs=[]; // all questions for current topic in start modal
+
+function openStart(tid) {
+  pendingTopicId=tid;
+  const t=topics.find(v=>v.id===tid);
+  document.getElementById('start-title').textContent=t.icon+' '+t.name;
+  document.getElementById('start-meta').textContent='กำลังโหลด...';
+  quizMode='all';
+  document.querySelectorAll('.mode-card').forEach(c=>c.classList.remove('selected'));
+  document.querySelector('.mode-card').classList.add('selected');
+  document.getElementById('n-row').style.display='none';
+  document.getElementById('pick-row').style.display='none';
+  dbGetIdx('questions','topicId',tid).then(qs=>{
+    qs.sort((a,b)=>{
+      const ao=a.qorder??null, bo=b.qorder??null;
+      if (ao!==null&&bo!==null) return ao-bo;
+      if (ao!==null) return -1; if (bo!==null) return 1;
+      return (a.addedAt||0)-(b.addedAt||0)||String(a._docId||'').localeCompare(String(b._docId||''));
+    });
+    _startQs=qs;
+    const total=qs.length;
+    const done=qs.filter(q=>q.done).length;
+    document.getElementById('start-meta').textContent=
+      `${total.toLocaleString()} ข้อทั้งหมด · ✓ ทำแล้ว ${done} · ยังไม่ได้ทำ ${total-done}`;
+  });
+  om('start-modal');
+}
+
+function selMode(m,el) {
+  quizMode=m;
+  document.querySelectorAll('.mode-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('n-row').style.display=m==='n'?'block':'none';
+  document.getElementById('pick-row').style.display=m==='pick'?'block':'none';
+  if (m==='pick') renderPickList();
+}
+
+function renderPickList() {
+  const LTP=['ก','ข','ค','ง','จ'];
+  const list=document.getElementById('pick-list');
+  list.innerHTML=_startQs.map((q,i)=>{
+    const isDone=!!q.done;
+    const qkey=q._docId||String(q.id); // Firebase key
+    return `<label style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);cursor:pointer;transition:background .12s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+      <input type="checkbox" id="pick_${qkey}" value="${qkey}"
+        style="margin-top:3px;flex-shrink:0;accent-color:var(--accent);width:16px;height:16px"
+        onchange="updatePickCount()">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.78rem;font-family:var(--mono);color:var(--muted);margin-bottom:2px">#${i+1} ${isDone?'<span style="color:var(--green)">✓ ทำแล้ว</span>':''}</div>
+        <div style="font-size:.85rem;line-height:1.4">${x(q.q)}</div>
+      </div>
+    </label>`;
+  }).join('');
+  updatePickCount();
+}
+
+function updatePickCount() {
+  const checked=document.querySelectorAll('#pick-list input[type=checkbox]:checked').length;
+  document.getElementById('pick-selected-count').textContent=`เลือก ${checked} ข้อ`;
+}
+
+function pickSelectAll(val) {
+  document.querySelectorAll('#pick-list input[type=checkbox]').forEach(cb=>cb.checked=val);
+  updatePickCount();
+}
+
+function pickSelectUndone() {
+  _startQs.forEach(q=>{
+    const qkey=q._docId||String(q.id);
+    const cb=document.getElementById('pick_'+qkey);
+    if (cb) cb.checked=!q.done;
+  });
+  updatePickCount();
+}
+
+async function beginQuiz() {
+  cm('start-modal'); showLoad('กำลังโหลด...');
+  let qs=_startQs.length ? _startQs : await dbGetIdx('questions','topicId',pendingTopicId);
+  if (!qs.length){hideLoad();toast('ยังไม่มีข้อสอบในหัวข้อนี้','err');return;}
+  qs.sort((a,b)=>{
+    const ao=a.qorder??null, bo=b.qorder??null;
+    if (ao!==null&&bo!==null) return ao-bo;
+    if (ao!==null) return -1; if (bo!==null) return 1;
+    return (a.addedAt||0)-(b.addedAt||0)||String(a._docId||'').localeCompare(String(b._docId||''));
+  });
+
+  if (quizMode==='pick') {
+    // ใช้ string key (_docId) แทน parseInt
+    const checked=Array.from(document.querySelectorAll('#pick-list input[type=checkbox]:checked')).map(cb=>cb.value);
+    if (!checked.length){hideLoad();toast('กรุณาเลือกข้อสอบอย่างน้อย 1 ข้อ','err');om('start-modal');return;}
+    qs=qs.filter(q=>checked.includes(q._docId||String(q.id)));
+  } else if (quizMode==='rand') {
+    qs=shuffle([...qs]);
+  } else if (quizMode==='n') {
+    const n=Math.min(parseInt(document.getElementById('n-count').value)||20,qs.length);
+    qs=qs.slice(0,n);
+  }
+
+  const t=topics.find(v=>v.id===pendingTopicId);
+  quizState={topicId:pendingTopicId,topicName:t.name,questions:qs,index:0,answers:[]};
+  hideLoad(); showPage('quiz'); renderQ();
+}
+
+// ── Quiz engine ────────────────────────────────────────────
+const LET=['ก','ข','ค','ง','จ'];
+function renderQ() {
+  const {questions,index,topicName}=quizState;
+  const q=questions[index], total=questions.length;
+  const pct=Math.round((index/total)*100);
+  document.getElementById('quiz-topic-name').textContent=topicName;
+  document.getElementById('quiz-prog').style.width=pct+'%';
+  document.getElementById('prog-label').textContent=`ข้อที่ ${index+1} / ${total}`;
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('live-score').textContent=`✓ ${quizState.answers.filter(a=>a.correct).length} / ${index}`;
+  document.getElementById('q-tag').textContent=`ข้อที่ ${index+1}`;
+  document.getElementById('q-text').textContent=q.q;
+
+  // แสดงรูปโจทย์ — ตรวจสอบว่า img_q มีค่าจริงและไม่ใช่ string เปล่า
+  const qiw=document.getElementById('q-img-wrap');
+  const hasImgQ = q.img_q && typeof q.img_q==='string' && q.img_q.length>10;
+  if (hasImgQ) {
+    document.getElementById('q-img').src=q.img_q;
+    qiw.style.display='block';
+  } else {
+    qiw.style.display='none';
+    document.getElementById('q-img').src='';
+  }
+
+  document.getElementById('status-wrap').style.display='none';
+  document.getElementById('reveal-wrap').innerHTML='';
+  document.getElementById('quiz-nav').style.display='flex';
+
+  // ปุ่มย้อนกลับ — แสดงเมื่อไม่ใช่ข้อแรก
+  document.getElementById('prev-btn').style.display=index>0?'inline-flex':'none';
+
+  // ตรวจสอบว่าข้อนี้เคยตอบไปแล้วหรือยัง (กรณีกดย้อนกลับ)
+  const prevAnswer=quizState.answers.find(a=>a.index===index);
+  if (prevAnswer) {
+    // แสดงผลเหมือนตอบแล้ว
+    document.getElementById('next-btn').style.display='inline-flex';
+    document.getElementById('skip-btn').style.display='none';
+    document.getElementById('next-btn').textContent=index===questions.length-1?'ดูผลคะแนน →':'ข้อถัดไป →';
+    document.getElementById('choices').innerHTML=q.a.map((opt,i)=>
+      `<button class="cbtn disabled" id="cb_${i}" style="pointer-events:none;cursor:default">
+        <div class="cletter">${LET[i]}</div><div class="ctext">${x(opt)}</div>
+      </button>`).join('');
+    document.getElementById('cb_'+q.ans).classList.add('correct');
+    if (!prevAnswer.correct && prevAnswer.chosen>=0)
+      document.getElementById('cb_'+prevAnswer.chosen).classList.add('wrong');
+    // แสดงเฉลย
+    const hasImgAns=q.img_ans&&typeof q.img_ans==='string'&&q.img_ans.length>10;
+    const hasExpl=q.expl&&String(q.expl).trim().length>0;
+    let inner='';
+    if (hasImgAns) inner+=`<div><div style="font-size:.75rem;font-weight:600;color:var(--green);padding:10px 16px 6px">🖼 รูปเฉลย</div><img src="${q.img_ans}" style="width:100%;display:block;max-height:500px;object-fit:contain" alt="รูปเฉลย" onerror="this.parentElement.style.display='none'"></div>`;
+    if (hasExpl) inner+=`<div class="reveal-expl">💡 ${x(q.expl)}</div>`;
+    if (!hasImgAns&&!hasExpl) inner=`<div class="reveal-noimg">ข้อนี้ไม่มีรูปเฉลยหรือคำอธิบายเพิ่มเติม</div>`;
+    const sw=document.getElementById('status-wrap');
+    sw.style.display='block';
+    sw.innerHTML=prevAnswer.correct
+      ?`<div class="status-badge correct">✓ ถูกต้อง! — ${x(LET[q.ans]+'. '+q.a[q.ans])}</div>`
+      :`<div class="status-badge wrong">✗ ผิด — คำตอบที่ถูกคือ ${x(LET[q.ans]+'. '+q.a[q.ans])}</div>`;
+    document.getElementById('reveal-wrap').innerHTML=
+      `<div class="reveal-box"><div class="reveal-header">🖼 เฉลย / วิธีทำ</div><div class="reveal-body">${inner}</div></div>`;
+  } else {
+    // ยังไม่ตอบ — แสดงปุ่มปกติ
+    document.getElementById('next-btn').style.display='none';
+    document.getElementById('skip-btn').style.display='inline-flex';
+    document.getElementById('choices').innerHTML=q.a.map((opt,i)=>
+      `<button class="cbtn" id="cb_${i}" onclick="pickAns(${i})">
+        <div class="cletter">${LET[i]}</div><div class="ctext">${x(opt)}</div>
+      </button>`).join('');
+  }
+}
+
+function pickAns(chosen) {
+  // ป้องกันการกดซ้ำ
+  if (quizState.answers.length > quizState.index) return;
+
+  const {questions,index}=quizState;
+  const q=questions[index], correct=chosen===q.ans;
+  quizState.answers.push({index,chosen,correct}); sessionDone++;
+
+  // ล็อคทุกปุ่ม
+  document.querySelectorAll('.cbtn').forEach(b=>{
+    b.classList.add('disabled');
+    b.style.pointerEvents='none';
+    b.style.cursor='default';
+  });
+  document.getElementById('cb_'+q.ans).classList.add('correct');
+  if (!correct) document.getElementById('cb_'+chosen).classList.add('wrong');
+
+  // แสดงผลถูก/ผิด
+  const sw=document.getElementById('status-wrap');
+  sw.style.display='block';
+  sw.innerHTML=correct
+    ?`<div class="status-badge correct">✓ ถูกต้อง! — ${x(LET[q.ans]+'. '+q.a[q.ans])}</div>`
+    :`<div class="status-badge wrong">✗ ผิด — คำตอบที่ถูกคือ ${x(LET[q.ans]+'. '+q.a[q.ans])}</div>`;
+
+  // ตรวจ img อย่างรัดกุม
+  const hasImgAns = q.img_ans && typeof q.img_ans==='string' && q.img_ans.length>10;
+  const hasExpl   = q.expl    && String(q.expl).trim().length>0;
+
+  // สร้าง reveal content — แสดงเฉพาะรูปเฉลย (ไม่ซ้ำรูปโจทย์)
+  let inner='';
+
+  if (hasImgAns) {
+    inner+=`<div>
+      <div style="font-size:.75rem;font-weight:600;color:var(--green);padding:10px 16px 6px">🖼 รูปเฉลย</div>
+      <img src="${q.img_ans}" style="width:100%;display:block;max-height:500px;object-fit:contain;background:#000" alt="รูปเฉลย"
+        onerror="this.parentElement.style.display='none'">
+    </div>`;
+  }
+
+  if (hasExpl) {
+    inner+=`<div class="reveal-expl">💡 ${x(q.expl)}</div>`;
+  }
+
+  if (!hasImgAns && !hasExpl) {
+    inner=`<div class="reveal-noimg">ข้อนี้ไม่มีรูปเฉลยหรือคำอธิบายเพิ่มเติม</div>`;
+  }
+
+  document.getElementById('reveal-wrap').innerHTML=
+    `<div class="reveal-box">
+       <div class="reveal-header">🖼 เฉลย / วิธีทำ</div>
+       <div class="reveal-body">${inner}</div>
+     </div>`;
+
+  document.getElementById('quiz-nav').style.display='flex';
+  document.getElementById('skip-btn').style.display='none';
+  document.getElementById('next-btn').style.display='inline-flex';
+  document.getElementById('next-btn').textContent=
+    index===questions.length-1?'ดูผลคะแนน →':'ข้อถัดไป →';
+}
+function prevQ(){
+  if (quizState.index<=0) return;
+  quizState.index--;
+  // ลบคำตอบของข้อที่กลับไปออก เพื่อให้ตอบใหม่ได้
+  quizState.answers=quizState.answers.filter(a=>a.index!==quizState.index);
+  renderQ();
+}
+function skipQ(){
+  if (quizState.answers.length <= quizState.index) {
+    quizState.answers.push({index:quizState.index,chosen:-1,correct:false,skipped:true});
+  }
+  nextQ();
+}
+function nextQ(){quizState.index++;quizState.index>=quizState.questions.length?showScore():renderQ();}
+
+// ── Score ──────────────────────────────────────────────────
+async function showScore() {
+  showPage('score');
+  const {questions,answers,topicId,topicName}=quizState;
+  const total=questions.length, correct=answers.filter(a=>a.correct).length;
+  const pct=Math.round((correct/total)*100);
+  document.getElementById('s-num').textContent=correct;
+  document.getElementById('s-of').textContent='/ '+total;
+  document.getElementById('score-ring').style.borderColor=pct>=80?'var(--green)':pct>=60?'var(--yellow)':'var(--red)';
+  const titles={100:'🏆 เยี่ยมยอด!',80:'🌟 ดีมาก!',60:'👍 ผ่าน',0:'📖 ทบทวนเพิ่ม'};
+  const tk=Object.keys(titles).reverse().find(k=>pct>=k);
+  document.getElementById('s-title').textContent=titles[tk];
+  document.getElementById('s-sub').textContent=`${correct} / ${total} ข้อ — ${pct}%`;
+  document.getElementById('review-section').innerHTML='<h3>สรุปคำตอบ</h3>'+answers.map(a=>{
+    const q=questions[a.index];
+    const txt=a.skipped?'ข้าม':a.correct?`✓ ${LET[q.ans]}. ${q.a[q.ans]}`:`✗ คุณตอบ: ${a.chosen>=0?LET[a.chosen]+'. '+q.a[a.chosen]:'?'} → ถูก: ${LET[q.ans]}. ${q.a[q.ans]}`;
+    return `<div class="rv-item ${a.correct?'ok':'ng'}">
+      <div class="rv-q">ข้อ ${a.index+1}. ${x(q.q)}</div>
+      <div class="rv-ans" style="color:${a.correct?'var(--green)':'var(--red)'}">${x(txt)}</div>
+    </div>`;
+  }).join('');
+
+  // ── บันทึกสถิติรายวัน ──
+  await recordDailyStats(topicId, topicName, total, correct);
+}
+function restartSame(){openStart(quizState.topicId);}
+
+// ── Topic Docs ─────────────────────────────────────────────
+async function openDocs(tid) {
+  currentDocTopicId=tid;
+  document.getElementById('docs-topic-name').textContent=topics.find(v=>v.id===tid).name;
+  document.getElementById('doc-img-input').value='';
+  document.getElementById('doc-pdf-input').value='';
+  await renderDocs();
+  om('docs-modal');
+}
+
+async function renderDocs() {
+  const grid=document.getElementById('docs-grid');
+  const empty=document.getElementById('docs-empty');
+  let docs=[];
+  try{docs=await dbGetIdx('topicdocs','topicId',currentDocTopicId);}catch(e){console.error(e);}
+  if (!docs.length){grid.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  grid.innerHTML=docs.map((d,i)=>{
+    const isPDF=d.fileType==='pdf';
+    const thumb=isPDF
+      ?`<div class="doc-pdf-thumb" onclick="openPDFViewer(${d.id})">
+          <div style="font-size:2.2rem">📄</div>
+          <div style="font-size:.72rem;color:var(--muted);padding:0 8px;text-align:center;word-break:break-all">${x(d.name||'PDF')}</div>
+        </div>`
+      :`<img class="doc-thumb" src="${d.data}" alt="${x(d.name||'รูป')}" onclick="openImgLB('${d.data}')">`;
+    return `<div class="doc-card">
+      ${thumb}
+      <div class="doc-foot">
+        <span class="doc-name" title="${x(d.name||'')}">${x(d.name||'ไฟล์ '+(i+1))}</span>
+        <button class="doc-del" onclick="delDoc(${d.id})">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function uploadDocs(input, fileType) {
+  const files=Array.from(input.files);
+  if (!files.length) return;
+  showLoad(`กำลังบันทึก 0/${files.length} ไฟล์...`);
+  let saved=0;
+  for (let i=0;i<files.length;i++) {
+    try {
+      const data=await readAsDataURL(files[i]);
+      await dbAdd('topicdocs',{topicId:currentDocTopicId,data,name:files[i].name,fileType,size:files[i].size,addedAt:Date.now()});
+      saved++;
+    } catch(e){console.error(e);toast(`บันทึก "${files[i].name}" ไม่สำเร็จ`,'err');}
+    document.getElementById('loading-msg').textContent=`กำลังบันทึก ${i+1}/${files.length} ไฟล์...`;
+  }
+  input.value=''; hideLoad();
+  await renderDocs();
+  if (saved>0) toast(`บันทึก ${saved} ไฟล์ ✓`,'ok');
+}
+
+async function delDoc(id) {
+  if (!confirm('ลบเอกสารนี้?')) return;
+  await dbDel('topicdocs',id).catch(()=>{});
+  await renderDocs(); toast('ลบแล้ว','ok');
+}
+
+// ── PDF Viewer (PDF.js) ────────────────────────────────────
+async function openPDFViewer(docId) {
+  let docs=[];
+  try{docs=await dbGetIdx('topicdocs','topicId',currentDocTopicId);}catch(e){}
+  const d=docs.find(v=>v.id===docId); if(!d) return;
+
+  if (typeof pdfjsLib==='undefined'){toast('PDF.js ยังโหลดไม่เสร็จ กรุณารอสักครู่','err');return;}
+
+  showLoad('กำลังโหลด PDF...');
+  pdfDocId=docId; pdfPage=1; pdfZoom=1.4;
+  document.getElementById('pdf-name').textContent=d.name||'PDF';
+
+  try {
+    pdfDoc=await pdfjsLib.getDocument({data:base64ToBytes(d.data)}).promise;
+    hideLoad();
+    om('pdf-viewer-modal');
+    await renderPDFPage();
+  } catch(e){
+    hideLoad(); console.error(e); toast('เปิด PDF ไม่สำเร็จ: '+e.message,'err');
+  }
+}
+
+async function renderPDFPage() {
+  if (!pdfDoc) return;
+  pdfPage=Math.max(1,Math.min(pdfPage,pdfDoc.numPages));
+  document.getElementById('pdf-page-info').textContent=`${pdfPage} / ${pdfDoc.numPages}`;
+  const page=await pdfDoc.getPage(pdfPage);
+  const vp=page.getViewport({scale:pdfZoom});
+  const canvas=document.getElementById('pdf-canvas');
+  canvas.width=vp.width; canvas.height=vp.height;
+  await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
+}
+
+function pdfPrev(){if(pdfPage>1){pdfPage--;renderPDFPage();}}
+function pdfNext(){if(pdfDoc&&pdfPage<pdfDoc.numPages){pdfPage++;renderPDFPage();}}
+function pdfZoomIn(){pdfZoom=Math.min(pdfZoom+.3,4);renderPDFPage();}
+function pdfZoomOut(){pdfZoom=Math.max(pdfZoom-.3,.5);renderPDFPage();}
+
+function base64ToBytes(dataUrl) {
+  const b64=dataUrl.split(',')[1];
+  const bin=atob(b64);
+  const bytes=new Uint8Array(bin.length);
+  for (let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+  return bytes.buffer;
+}
+
+// ── Image lightbox ─────────────────────────────────────────
+function openImgLB(src){document.getElementById('lb-img').src=src;document.getElementById('lightbox').classList.add('open');}
+function closeLB(){document.getElementById('lightbox').classList.remove('open');document.getElementById('lb-img').src='';}
+
+// ── Library ────────────────────────────────────────────────
+// ── File type helpers ──────────────────────────────────────
+const FILE_ICONS={image:'🖼',pdf:'📄',word:'📝',excel:'📊',ppt:'📑',unknown:'📎'};
+const FILE_COLORS={image:'var(--muted)',pdf:'var(--red)',word:'#2b7cd3',excel:'var(--green)',ppt:'#d04423',unknown:'var(--muted)'};
+function getFileType(name='') {
+  const ext=name.split('.').pop().toLowerCase();
+  if (['jpg','jpeg','png','webp','gif','bmp','svg'].includes(ext)) return 'image';
+  if (ext==='pdf') return 'pdf';
+  if (['doc','docx'].includes(ext)) return 'word';
+  if (['xls','xlsx','csv'].includes(ext)) return 'excel';
+  if (['ppt','pptx'].includes(ext)) return 'ppt';
+  return 'unknown';
+}
+function fileIcon(type){return FILE_ICONS[type]||FILE_ICONS.unknown;}
+function fileColor(type){return FILE_COLORS[type]||FILE_COLORS.unknown;}
+
+// ── Library ────────────────────────────────────────────────
+async function renderLibrary() {
+  const books=await dbGetAll('books');
+  const q=(document.getElementById('lib-search')?.value||'').toLowerCase();
+  const filtered=books.filter(b=>b.name.toLowerCase().includes(q));
+  // count files per book
+  const fileCounts={};
+  for (const b of filtered) fileCounts[b.id]=await dbCntIdx('pages','bookId',b.id);
+
+  document.getElementById('lib-grid').innerHTML=filtered.map(b=>`
+    <div class="lib-card" onclick="openBook('${b.id}')">
+      ${b.cover
+        ?`<img class="lib-card-thumb" src="${b.cover}" alt="${x(b.name)}">`
+        :`<div class="lib-card-thumb" style="display:flex;align-items:center;justify-content:center;font-size:3rem;background:var(--surface2)">📁</div>`}
+      <div class="lib-card-body">
+        <div class="lib-card-name">${x(b.name)}</div>
+        <div class="lib-card-meta">${x(b.desc||'')} · ${fileCounts[b.id]||0} ไฟล์</div>
+        <div class="lib-card-actions" style="display:flex;gap:4px;margin-top:8px" onclick="event.stopPropagation()">
+          <button class="btn btn-outline btn-sm" onclick="openBook('${b.id}')">เปิด</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteBook('${b.id}')">🗑</button>
+        </div>
+      </div>
+    </div>`).join('')+
+    `<div class="lib-add-card" onclick="openAddBook()">
+      <div style="font-size:2rem;opacity:.4">+</div>
+      <div style="font-size:.85rem">เพิ่มแฟ้ม</div>
+    </div>`;
+}
+
+function openAddBook(){
+  document.getElementById('bk-name').value='';
+  document.getElementById('bk-desc').value='';
+  clrImg('bk-cover-prev','bk-cover-lbl','📷 อัพโหลดรูปปก','_bkCover');
+  om('add-book-modal');
+}
+async function saveBook(){
+  const name=document.getElementById('bk-name').value.trim();
+  if (!name){toast('กรุณาใส่ชื่อแฟ้ม','err');return;}
+  await dbPut('books',{id:'bk_'+Date.now(),name,desc:document.getElementById('bk-desc').value.trim(),cover:getImg('_bkCover')||''});
+  cm('add-book-modal'); await renderLibrary(); toast('เพิ่มแฟ้มแล้ว ✓','ok');
+}
+async function deleteBook(id){
+  if (!confirm('ลบแฟ้มนี้และไฟล์ทั้งหมด?')) return;
+  const pages=await dbGetIdx('pages','bookId',id);
+  for (const p of pages) await dbDel('pages',p.id);
+  await dbDel('books',id); await renderLibrary(); toast('ลบแล้ว','ok');
+}
+
+async function openBook(bookId){
+  currentBookId=bookId;
+  const books=await dbGetAll('books');
+  const b=books.find(v=>v.id===bookId);
+  document.getElementById('book-view-title').textContent=b.name;
+  document.getElementById('book-view-meta').textContent=b.desc||'';
+  document.getElementById('book-del-btn').onclick=()=>deleteBook(bookId).then(()=>showMain('library'));
+  await renderBookPages(); showPage('book');
+}
+
+async function renderBookPages(){
+  const pages=await dbGetIdx('pages','bookId',currentBookId);
+  const grid=document.getElementById('book-pages-grid');
+  if (!pages.length){
+    grid.innerHTML='<div style="color:var(--muted);text-align:center;grid-column:1/-1;padding:3rem">ยังไม่มีไฟล์ — กด "+ เพิ่มไฟล์"</div>';
+    return;
+  }
+  grid.innerHTML=pages.map((p,i)=>{
+    const ft=p.fileType||getFileType(p.name||'');
+    const isImg=ft==='image';
+    const isPDF=ft==='pdf';
+    const thumb=isImg
+      ?`<img class="lib-card-thumb" src="${p.data}" alt="${x(p.name||'')}" onclick="openImgLB('${p.data}')" style="cursor:zoom-in">`
+      :`<div class="lib-card-thumb" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;background:var(--surface2)" onclick="${isPDF?`openBookPDF(${p.id})`:`openDownload(${p.id})`}">
+          <div style="font-size:2.8rem">${fileIcon(ft)}</div>
+          <div style="font-size:.72rem;color:${fileColor(ft)};font-weight:700;text-transform:uppercase">${ft.toUpperCase()}</div>
+        </div>`;
+    return `<div class="lib-card">
+      ${thumb}
+      <div class="lib-card-body">
+        <div class="lib-card-name" title="${x(p.name||'')}" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x(p.name||('ไฟล์ '+(i+1)))}</div>
+        <div class="lib-card-actions" style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap">
+          ${isImg?`<button class="btn btn-outline btn-sm" onclick="openImgLB('${p.data}')">🔍</button>`:''}
+          ${isPDF?`<button class="btn btn-outline btn-sm" onclick="openBookPDF(${p.id})">📄 เปิด</button>`:''}
+          ${!isImg&&!isPDF?`<button class="btn btn-outline btn-sm" onclick="openDownload(${p.id})">⬇ ดาวน์โหลด</button>`:''}
+          <button class="btn btn-danger btn-sm" onclick="delPage(${p.id})">🗑</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function openBookPDF(pageId){
+  const pages=await dbGetIdx('pages','bookId',currentBookId);
+  const p=pages.find(v=>v.id===pageId); if(!p) return;
+  if (typeof pdfjsLib==='undefined'){toast('PDF.js ยังโหลดไม่เสร็จ','err');return;}
+  showLoad('กำลังโหลด PDF...');
+  pdfDocId=pageId; pdfPage=1; pdfZoom=1.4;
+  document.getElementById('pdf-name').textContent=p.name||'PDF';
+  try {
+    pdfDoc=await pdfjsLib.getDocument({data:base64ToBytes(p.data)}).promise;
+    hideLoad(); om('pdf-viewer-modal'); await renderPDFPage();
+  } catch(e){hideLoad();toast('เปิด PDF ไม่สำเร็จ: '+e.message,'err');}
+}
+
+async function openDownload(pageId){
+  const pages=await dbGetIdx('pages','bookId',currentBookId);
+  const p=pages.find(v=>v.id===pageId); if(!p) return;
+  const a=document.createElement('a');
+  a.href=p.data; a.download=p.name||'file';
+  a.click(); toast('กำลังดาวน์โหลด...','ok');
+}
+
+// ── Add pages queue ────────────────────────────────────────
+let apFilesData=[];
+
+function openAddPages(){
+  apFilesData=[];
+  document.getElementById('ap-previews').innerHTML='';
+  document.getElementById('ap-queue-info').style.display='none';
+  ['ap-img-files','ap-pdf-files','ap-word-files','ap-excel-files','ap-ppt-files'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ap-book-name').textContent=document.getElementById('book-view-title').textContent;
+  om('add-pages-modal');
+}
+
+function addToPageQueue(input, fileType){
+  const files=Array.from(input.files);
+  files.forEach(f=>{
+    const r=new FileReader();
+    r.onload=e=>{
+      apFilesData.push({data:e.target.result,name:f.name,fileType,size:f.size});
+      renderPageQueue();
+    };
+    r.readAsDataURL(f);
+  });
+}
+
+function renderPageQueue(){
+  const prev=document.getElementById('ap-previews');
+  prev.innerHTML=apFilesData.map((f,i)=>{
+    const isImg=f.fileType==='image';
+    const thumb=isImg
+      ?`<img src="${f.data}" style="width:100%;height:80px;object-fit:cover;display:block;border-radius:8px 8px 0 0">`
+      :`<div style="height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:var(--surface);border-radius:8px 8px 0 0">
+          <span style="font-size:1.8rem">${fileIcon(f.fileType)}</span>
+          <span style="font-size:.68rem;color:${fileColor(f.fileType)};font-weight:700">${f.fileType.toUpperCase()}</span>
+        </div>`;
+    return `<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;position:relative">
+      ${thumb}
+      <div style="padding:4px 6px;font-size:.68rem;color:var(--muted);background:var(--surface2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${x(f.name)}">${x(f.name)}</div>
+      <button onclick="removePageQueueItem(${i})" style="position:absolute;top:3px;right:3px;background:rgba(0,0,0,.6);border:none;border-radius:50%;width:20px;height:20px;color:#fff;cursor:pointer;font-size:.7rem;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>`;
+  }).join('');
+  const info=document.getElementById('ap-queue-info');
+  if (apFilesData.length){
+    info.style.display='block';
+    info.textContent=`เลือกไว้ ${apFilesData.length} ไฟล์ · คลิกปุ่มด้านบนเพื่อเพิ่มไฟล์อื่น`;
+  } else {
+    info.style.display='none';
+  }
+}
+
+function removePageQueueItem(i){
+  apFilesData.splice(i,1); renderPageQueue();
+}
+
+function clearPageQueue(){
+  apFilesData=[]; renderPageQueue();
+}
+
+async function savePages(){
+  if (!apFilesData.length){toast('กรุณาเลือกไฟล์','err');return;}
+  showLoad(`กำลังบันทึก 0/${apFilesData.length} ไฟล์...`); cm('add-pages-modal');
+  for (let i=0;i<apFilesData.length;i++){
+    const f=apFilesData[i];
+    await dbAdd('pages',{bookId:currentBookId,data:f.data,name:f.name,fileType:f.fileType});
+    document.getElementById('loading-msg').textContent=`กำลังบันทึก ${i+1}/${apFilesData.length} ไฟล์...`;
+  }
+  apFilesData=[];
+  hideLoad(); await renderBookPages(); toast(`บันทึกไฟล์แล้ว ✓`,'ok');
+}
+
+async function delPage(id){
+  if (!confirm('ลบไฟล์นี้?')) return;
+  await dbDel('pages',id); await renderBookPages(); toast('ลบแล้ว','ok');
+}
+
+// ── Stats system ───────────────────────────────────────────
+function todayKey() {
+  const d=new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function dateKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+async function recordDailyStats(topicId, topicName, total, correct) {
+  const date=todayKey();
+  let rec=null;
+  try { rec=await idbOp('dailystats','readonly',o=>o.get(date)); } catch(e){}
+  if (!rec) rec={date,total:0,correct:0,sessions:[],byTopic:{}};
+  rec.total+=total; rec.correct+=correct;
+  rec.sessions.push({time:Date.now(),topicId,topicName,total,correct});
+  if (!rec.byTopic[topicId]) rec.byTopic[topicId]={name:topicName,total:0,correct:0};
+  rec.byTopic[topicId].total+=total; rec.byTopic[topicId].correct+=correct;
+  await dbPut('dailystats',rec);
+}
+
+// ── Date picker helpers (วัน/เดือน/ปี) ────────────────────
+const THAI_MONTHS=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+  'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+
+function initDatePickers() {
+  const now=new Date();
+  const curY=now.getFullYear();
+  // build options for each select
+  ['df','dt'].forEach(pfx=>{
+    // days 1-31
+    const dSel=document.getElementById(pfx+'-d');
+    dSel.innerHTML=[...Array(31)].map((_,i)=>`<option value="${i+1}">${String(i+1).padStart(2,'0')}</option>`).join('');
+    // months
+    const mSel=document.getElementById(pfx+'-m');
+    mSel.innerHTML=THAI_MONTHS.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+    // years (past 5 years to current)
+    const ySel=document.getElementById(pfx+'-y');
+    ySel.innerHTML=[...Array(6)].map((_,i)=>`<option value="${curY-5+i}">${curY-5+i+543}</option>`).join('');
+  });
+  // default: from = today, to = today
+  const d=now.getDate(), m=now.getMonth()+1, y=now.getFullYear();
+  document.getElementById('df-d').value=d;
+  document.getElementById('df-m').value=m;
+  document.getElementById('df-y').value=y;
+  document.getElementById('dt-d').value=d;
+  document.getElementById('dt-m').value=m;
+  document.getElementById('dt-y').value=y;
+}
+
+function getPickerDate(pfx) {
+  const d=String(document.getElementById(pfx+'-d').value).padStart(2,'0');
+  const m=String(document.getElementById(pfx+'-m').value).padStart(2,'0');
+  const y=document.getElementById(pfx+'-y').value;
+  return `${y}-${m}-${d}`; // YYYY-MM-DD for comparison
+}
+
+function onCustomDate() { renderStats(); }
+
+// period state
+let _period='today';
+let _filterTopicId=null; // null = show all
+
+function setPeriod(p, el) {
+  _period=p;
+  _filterTopicId=null;
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  const cr=document.getElementById('custom-range');
+  if (p==='custom') {
+    cr.style.display='flex';
+    initDatePickers();
+  } else {
+    cr.style.display='none';
+    renderStats();
+  }
+}
+
+function getPeriodRange(allStats) {
+  const today=todayKey();
+  const now=new Date();
+  let from, to=today, label='';
+  if (_period==='today') {
+    from=today; label='วันนี้';
+  } else if (_period==='7') {
+    const d=new Date(now); d.setDate(d.getDate()-6);
+    from=dateKey(d); label='7 วันล่าสุด';
+  } else if (_period==='30') {
+    const d=new Date(now); d.setDate(d.getDate()-29);
+    from=dateKey(d); label='30 วันล่าสุด';
+  } else if (_period==='365') {
+    const d=new Date(now); d.setFullYear(d.getFullYear()-1);
+    from=dateKey(d); label='1 ปีล่าสุด';
+  } else if (_period==='all') {
+    from='0'; label='ทั้งหมด';
+  } else if (_period==='custom') {
+    from=getPickerDate('df');
+    to=getPickerDate('dt');
+    const fmtF=`${document.getElementById('df-d').value} ${THAI_MONTHS[parseInt(document.getElementById('df-m').value)-1]} ${parseInt(document.getElementById('df-y').value)+543}`;
+    const fmtT=`${document.getElementById('dt-d').value} ${THAI_MONTHS[parseInt(document.getElementById('dt-m').value)-1]} ${parseInt(document.getElementById('dt-y').value)+543}`;
+    label=`${fmtF} — ${fmtT}`;
+  }
+  const filtered=allStats.filter(r=>r.date>=from&&r.date<=to);
+  return {filtered, from, to, label};
+}
+
+function buildChart(filtered, period) {
+  // decide granularity
+  const days = period==='today' ? 1
+    : period==='7' ? 7
+    : period==='30' ? 30
+    : period==='365' ? 12   // monthly
+    : period==='all' ? Math.min(filtered.length, 30)
+    : 30; // custom → daily up to 30 cols
+
+  const isMonthly = period==='365';
+  const cols=[];
+  const now=new Date();
+
+  if (isMonthly) {
+    for (let i=11;i>=0;i--) {
+      const d=new Date(now.getFullYear(), now.getMonth()-i, 1);
+      const mKey=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+      const recs=filtered.filter(r=>r.date.startsWith(mKey));
+      const total=recs.reduce((s,r)=>s+r.total,0);
+      const correct=recs.reduce((s,r)=>s+r.correct,0);
+      const thM=['ม.ค','ก.พ','มี.ค','เม.ย','พ.ค','มิ.ย','ก.ค','ส.ค','ก.ย','ต.ค','พ.ย','ธ.ค'];
+      cols.push({label:thM[d.getMonth()],total,correct,isToday:false});
+    }
+  } else {
+    const n=Math.min(days,60);
+    for (let i=n-1;i>=0;i--) {
+      const d=new Date(now); d.setDate(d.getDate()-i);
+      const k=dateKey(d);
+      const rec=filtered.find(r=>r.date===k)||{total:0,correct:0};
+      const dayNames=['อา','จ','อ','พ','พฤ','ศ','ส'];
+      cols.push({label:n<=14?dayNames[d.getDay()]:String(d.getDate()),total:rec.total,correct:rec.correct,isToday:k===todayKey()});
+    }
+  }
+  return cols;
+}
+
+async function renderStats() {
+  const allStats=await dbGetAll('dailystats');
+  allStats.sort((a,b)=>b.date.localeCompare(a.date));
+
+  const {filtered, label} = getPeriodRange(allStats);
+
+  // period description
+  document.getElementById('period-desc').textContent=
+    `แสดง ${filtered.length} วัน — ${label}`;
+
+  // summary cards (filtered range)
+  const ovTotal=filtered.reduce((s,r)=>s+r.total,0);
+  const ovCorrect=filtered.reduce((s,r)=>s+r.correct,0);
+  const ovWrong=ovTotal-ovCorrect;
+  const ovPct=ovTotal?Math.round((ovCorrect/ovTotal)*100):0;
+  document.getElementById('ov-total').textContent=ovTotal.toLocaleString();
+  document.getElementById('ov-correct').textContent=ovCorrect.toLocaleString();
+  document.getElementById('ov-wrong').textContent=ovWrong.toLocaleString();
+  document.getElementById('ov-pct').textContent=ovPct+'%';
+  document.getElementById('ov-days').textContent=filtered.length;
+
+  // streak (always use allStats)
+  let streak=0, check=new Date();
+  for (let i=0;i<3650;i++) {
+    const k=dateKey(check);
+    if (allStats.find(r=>r.date===k)) { streak++; check.setDate(check.getDate()-1); }
+    else break;
+  }
+  document.getElementById('streak-num').textContent=streak;
+
+  // today summary (always today)
+  const todayRec=allStats.find(r=>r.date===todayKey());
+  if (todayRec) {
+    const tp=todayRec.total?Math.round((todayRec.correct/todayRec.total)*100):0;
+    document.getElementById('today-summary').textContent=
+      `ทำ ${todayRec.total} ข้อ ✓${todayRec.correct} ✗${todayRec.total-todayRec.correct} (${tp}%)`;
+  } else {
+    document.getElementById('today-summary').textContent='ยังไม่ได้ทำวันนี้';
+  }
+
+  // chart
+  const cols=buildChart(filtered, _period);
+  const maxTotal=Math.max(...cols.map(c=>c.total),1);
+  document.getElementById('chart-title').textContent=label;
+  document.getElementById('week-chart').innerHTML=cols.map(c=>{
+    const hPct=Math.round((c.total/maxTotal)*100);
+    const cPct=c.total?Math.round((c.correct/c.total)*100):0;
+    return `<div class="chart-bar-col" style="min-width:${cols.length>20?'16px':'auto'}">
+      <div style="font-size:.6rem;color:var(--muted);font-family:var(--mono);margin-bottom:2px;text-align:center">${c.total||''}</div>
+      <div class="chart-bar-outer">
+        <div class="chart-bar-inner" style="height:${hPct}%;background:${c.isToday?'var(--accent)':cPct>=80?'var(--green)':cPct>=60?'var(--yellow)':'var(--red)'};opacity:${c.total?1:.15}"></div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('week-labels').innerHTML=cols.map(c=>
+    `<div class="chart-label" style="flex:1;min-width:${cols.length>20?'16px':'auto'};text-align:center">${c.label}</div>`
+  ).join('');
+
+  // by topic (filtered) — clickable rows
+  const topicMap={};
+  filtered.forEach(rec=>{
+    Object.entries(rec.byTopic||{}).forEach(([tid,td])=>{
+      if (!topicMap[tid]) topicMap[tid]={name:td.name,total:0,correct:0,tid};
+      topicMap[tid].total+=td.total; topicMap[tid].correct+=td.correct;
+    });
+  });
+  const topicArr=Object.values(topicMap).sort((a,b)=>b.total-a.total);
+  const maxT=Math.max(...topicArr.map(t=>t.total),1);
+  const tColor=topics.reduce((m,t)=>{m[t.id]=t.color;return m;},{});
+  document.getElementById('topic-stats-list').innerHTML=topicArr.length
+    ? topicArr.map(t=>{
+        const pct=t.total?Math.round((t.correct/t.total)*100):0;
+        const isActive=_filterTopicId===t.tid;
+        return `<div class="topic-stat-row" onclick="filterByTopic('${t.tid}')"
+          style="cursor:pointer;border-radius:8px;padding:8px;margin:-8px;background:${isActive?'rgba(56,139,253,.08)':'transparent'};border:1px solid ${isActive?'var(--accent)':'transparent'}">
+          <div class="topic-stat-name" style="display:flex;align-items:center;gap:6px">
+            <span style="width:8px;height:8px;border-radius:50%;background:${tColor[t.tid]||'var(--accent)'};flex-shrink:0;display:inline-block"></span>
+            ${x(t.name)}
+          </div>
+          <div class="topic-stat-bar-bg"><div class="topic-stat-bar-fill" style="width:${Math.round((t.total/maxT)*100)}%;background:${tColor[t.tid]||'var(--accent)'}"></div></div>
+          <div class="topic-stat-nums">✓${t.correct} ✗${t.total-t.correct} <span style="color:${pct>=80?'var(--green)':pct>=60?'var(--yellow)':'var(--red)'}">${pct}%</span></div>
+        </div>`;
+      }).join('')
+    : '<div style="color:var(--muted);font-size:.88rem;padding:.5rem 0">ไม่มีข้อมูลในช่วงนี้</div>';
+
+  // topic detail panel
+  if (_filterTopicId && topicMap[_filterTopicId]) {
+    const td=topicMap[_filterTopicId];
+    const pct=td.total?Math.round((td.correct/td.total)*100):0;
+    const tCol=tColor[_filterTopicId]||'var(--accent)';
+    document.getElementById('topic-detail-name').innerHTML=
+      `<span style="width:12px;height:12px;border-radius:50%;background:${tCol};display:inline-block;margin-right:6px"></span>${x(td.name)}`;
+    document.getElementById('topic-detail-stats').innerHTML=`
+      <div class="big-stat" style="min-width:100px"><div class="big-stat-num">${td.total}</div><div class="big-stat-label">ทำทั้งหมด</div></div>
+      <div class="big-stat" style="min-width:100px"><div class="big-stat-num" style="color:var(--green)">${td.correct}</div><div class="big-stat-label">ถูก</div></div>
+      <div class="big-stat" style="min-width:100px"><div class="big-stat-num" style="color:var(--red)">${td.total-td.correct}</div><div class="big-stat-label">ผิด</div></div>
+      <div class="big-stat" style="min-width:100px"><div class="big-stat-num" style="color:${pct>=80?'var(--green)':pct>=60?'var(--yellow)':'var(--red)'}">${pct}%</div><div class="big-stat-label">% ถูก</div></div>`;
+    // sessions for this topic
+    const sessions=[];
+    filtered.forEach(rec=>{
+      (rec.sessions||[]).filter(s=>s.topicId===_filterTopicId).forEach(s=>{
+        sessions.push({...s,date:rec.date});
+      });
+    });
+    sessions.sort((a,b)=>b.time-a.time);
+    document.getElementById('topic-detail-sessions').innerHTML=sessions.length
+      ? sessions.map(s=>{
+          const sp=s.total?Math.round((s.correct/s.total)*100):0;
+          const dt=new Date(s.time);
+          const timeStr=`${dt.getHours().toString().padStart(2,'0')}:${dt.getMinutes().toString().padStart(2,'0')}`;
+          return `<div class="sday-card" style="margin-bottom:8px">
+            <div>
+              <div class="sday-date">${formatDate(s.date)}</div>
+              <div style="font-size:.68rem;color:var(--muted);font-family:var(--mono)">${timeStr} น.</div>
+            </div>
+            <div class="sday-bars">
+              <div class="sday-bar-wrap">
+                <span style="color:var(--green);width:12px;flex-shrink:0">✓</span>
+                <div class="sday-bar-bg"><div class="sday-bar-fill" style="width:${s.total?Math.round((s.correct/s.total)*100):0}%;background:var(--green)"></div></div>
+                <span class="sday-nums" style="color:var(--green)">${s.correct}</span>
+              </div>
+              <div class="sday-bar-wrap">
+                <span style="color:var(--red);width:12px;flex-shrink:0">✗</span>
+                <div class="sday-bar-bg"><div class="sday-bar-fill" style="width:${s.total?Math.round(((s.total-s.correct)/s.total)*100):0}%;background:var(--red)"></div></div>
+                <span class="sday-nums" style="color:var(--red)">${s.total-s.correct}</span>
+              </div>
+            </div>
+            <div>
+              <div class="sday-pct" style="color:${sp>=80?'var(--green)':sp>=60?'var(--yellow)':'var(--red)'}">${sp}%</div>
+              <div style="font-size:.7rem;color:var(--muted);text-align:right;font-family:var(--mono)">${s.total} ข้อ</div>
+            </div>
+          </div>`;
+        }).join('')
+      : '<div style="color:var(--muted);font-size:.85rem;padding:.5rem 0">ไม่มีข้อมูลในช่วงที่เลือก</div>';
+    document.getElementById('topic-detail-wrap').style.display='block';
+    document.getElementById('daily-wrap').style.display='none';
+    document.getElementById('clear-topic-filter').style.display='inline-flex';
+  } else {
+    document.getElementById('topic-detail-wrap').style.display='none';
+    document.getElementById('daily-wrap').style.display='block';
+    document.getElementById('clear-topic-filter').style.display='none';
+  }
+
+  // daily list (filtered, sorted desc)
+  document.getElementById('daily-list').innerHTML=filtered.length
+    ? filtered.map(r=>{
+        const wrong=r.total-r.correct;
+        const pct=r.total?Math.round((r.correct/r.total)*100):0;
+        const isToday=r.date===todayKey();
+        return `<div class="sday-card">
+          <div>
+            <div class="sday-date">${formatDate(r.date)}</div>
+            ${isToday?'<div style="font-size:.68rem;color:var(--accent);font-family:var(--mono)">วันนี้</div>':''}
+          </div>
+          <div class="sday-bars">
+            <div class="sday-bar-wrap">
+              <span style="color:var(--green);width:12px;flex-shrink:0">✓</span>
+              <div class="sday-bar-bg"><div class="sday-bar-fill" style="width:${r.total?Math.round((r.correct/r.total)*100):0}%;background:var(--green)"></div></div>
+              <span class="sday-nums" style="color:var(--green)">${r.correct}</span>
+            </div>
+            <div class="sday-bar-wrap">
+              <span style="color:var(--red);width:12px;flex-shrink:0">✗</span>
+              <div class="sday-bar-bg"><div class="sday-bar-fill" style="width:${r.total?Math.round((wrong/r.total)*100):0}%;background:var(--red)"></div></div>
+              <span class="sday-nums" style="color:var(--red)">${wrong}</span>
+            </div>
+          </div>
+          <div>
+            <div class="sday-pct" style="color:${pct>=80?'var(--green)':pct>=60?'var(--yellow)':'var(--red)'}">${pct}%</div>
+            <div style="font-size:.7rem;color:var(--muted);text-align:right;font-family:var(--mono)">${r.total} ข้อ</div>
+          </div>
+        </div>`;
+      }).join('')
+    : '<div style="color:var(--muted);font-size:.88rem;padding:1rem 0">ไม่มีข้อมูลในช่วงที่เลือก</div>';
+}
+function filterByTopic(tid) {
+  _filterTopicId = (_filterTopicId===tid) ? null : tid;
+  renderStats();
+}
+function clearTopicFilter() {
+  _filterTopicId=null;
+  renderStats();
+}
+
+function formatDate(dateStr) {
+  const [y,m,d]=dateStr.split('-');
+  const thMonths=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  return `${parseInt(d)} ${thMonths[parseInt(m)]} ${parseInt(y)+543}`;
+}
+
+function toggleStatsMenu(e) {
+  e.stopPropagation();
+  const mnu=document.getElementById('stats-mnu');
+  const wasOpen=mnu.classList.contains('open');
+  closeAllMenus();
+  if (!wasOpen) mnu.classList.add('open');
+}
+function closeStatsMenu() {
+  document.getElementById('stats-mnu').classList.remove('open');
+}
+
+async function exportStatsCSV() {
+  const all=await dbGetAll('dailystats');
+  all.sort((a,b)=>a.date.localeCompare(b.date));
+  const rows=[['วันที่','ทำทั้งหมด','ถูก','ผิด','% ถูก']];
+  all.forEach(r=>{
+    const pct=r.total?Math.round((r.correct/r.total)*100):0;
+    rows.push([formatDate(r.date), r.total, r.correct, r.total-r.correct, pct+'%']);
+  });
+  const csv=rows.map(r=>r.join(',')).join('\n');
+  const bom='\uFEFF'; // UTF-8 BOM for Thai in Excel
+  const blob=new Blob([bom+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='quiz_stats_'+todayKey()+'.csv';
+  a.click();
+  toast('ส่งออก CSV แล้ว ✓','ok');
+}
+
+function printStats() {
+  window.print();
+}
+
+function confirmClearStats() { om('clear-stats-modal'); }
+async function doClearStats() {
+  cm('clear-stats-modal');
+  const all=await dbGetAll('dailystats');
+  for (const r of all) await dbDel('dailystats',r.date);
+  await renderStats(); toast('ล้างสถิติแล้ว','ok');
+}
+
+// ── Emoji Picker ───────────────────────────────────────────
+const EMOJIS = {
+  tech:   ['⚙️','🔧','🔩','🛠️','🔨','⛏️','🪛','🪚','🔌','💡','🔋','🖥️','💻','🖨️','⌨️','🖱️','📱','📡','🛰️','✈️','🚀','🛻','🚂','⚓','⛽','🔭','🔬','💊','🧪','🧬','🧲','⚡','🌡️','🧯','🏗️','🏭','🔑','🗝️','🪝','⛓️','🧱'],
+  science:['🔬','🧬','🧪','⚗️','🌡️','🧲','⚡','🔋','💡','🌊','🌪️','❄️','🔥','💧','🌍','☀️','🌙','⭐','🪐','☄️','🌈','🌊','🏔️','🗻','🌋','🧊','🌬️','🌀','⚛️','🫧','🩺','🩻'],
+  nature: ['🌊','💧','🔥','❄️','🌪️','⚡','🌍','🌱','🌳','🪨','🪵','🌬️','☁️','⛅','🌦️','🌈','☀️','🌙','⭐','🌊','🏔️','🏜️','🌿','🍃'],
+  symbol: ['📐','📏','🔢','🔣','📊','📈','📉','📋','📌','📍','🗂️','📁','📂','📄','📃','📑','🗒️','📝','✏️','🖊️','🖋️','✒️','📒','📓','📔','📕','📗','📘','📙','📚','🔍','🔎','🔏','🔐','🔒','🔓'],
+  other:  ['😊','👍','✅','❌','⭕','💯','🏆','🥇','🎯','💪','🧠','👁️','👊','🙌','💥','🌟','⭐','✨','💫','🎉','🎊','🎓','📚','✍️','🤔','💡','🚦','🛡️','⚖️','🎮','🕹️','🎲']
+};
+const ALL_EMOJIS = Object.values(EMOJIS).flat();
+let _emojiCat = 'all';
+
+function toggleEmojiPicker() {
+  const p=document.getElementById('emoji-picker');
+  p.style.display=p.style.display==='none'?'block':'none';
+  if (p.style.display==='block') { _emojiCat='all'; renderEmojiGrid(ALL_EMOJIS); }
+}
+function showEmojiCat(cat, el) {
+  _emojiCat=cat;
+  document.querySelectorAll('.ebtn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('emoji-search').value='';
+  renderEmojiGrid(cat==='all'?ALL_EMOJIS:EMOJIS[cat]||ALL_EMOJIS);
+}
+function filterEmoji(q) {
+  const list=_emojiCat==='all'?ALL_EMOJIS:EMOJIS[_emojiCat]||ALL_EMOJIS;
+  renderEmojiGrid(q?list:list);
+}
+function renderEmojiGrid(list) {
+  document.getElementById('emoji-grid').innerHTML=list.map(e=>
+    `<span class="emoji-item" onclick="pickEmoji('${e}')">${e}</span>`).join('');
+}
+function pickEmoji(e) {
+  document.getElementById('tm-icon').value=e;
+  document.getElementById('tm-icon-preview').textContent=e;
+  document.getElementById('emoji-picker').style.display='none';
+}
+
+
+// ── Import — single page with auto-preview ──────────────────
+let _impParsed = [];
+let _impImgMap = {};
+let _impAutoTimer = null;
+
+function openImport(tid) {
+  pendingTopicId=tid;
+  document.getElementById('imp-topic-name').textContent=topics.find(v=>v.id===tid).name;
+  document.getElementById('imp-json').value='';
+  document.getElementById('imp-file').value='';
+  document.getElementById('imp-q-list').innerHTML='';
+  document.getElementById('imp-q-section').style.display='none';
+  document.getElementById('imp-invalid-notice').style.display='none';
+  _impParsed=[]; _impImgMap={};
+  om('import-modal');
+}
+
+function loadJSONFile() {
+  const f=document.getElementById('imp-file').files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    document.getElementById('imp-json').value=e.target.result;
+    impAutoPreview();
+  };
+  r.readAsText(f);
+}
+
+function impAutoPreview() {
+  clearTimeout(_impAutoTimer);
+  _impAutoTimer=setTimeout(()=>{
+    let raw=document.getElementById('imp-json').value.trim();
+    if (!raw) {
+      document.getElementById('imp-q-section').style.display='none';
+      document.getElementById('imp-invalid-notice').style.display='none';
+      _impParsed=[];
+      return;
+    }
+    try {
+      raw=raw.replace(/^\uFEFF/,'').replace(/^```[a-z]*\n?/,'').replace(/\n?```$/,'').trim();
+      if (raw.startsWith('{')) raw='['+raw+']';
+      const data=JSON.parse(raw);
+      if (!Array.isArray(data)||!data.length) throw new Error('ต้องเป็น array');
+      const prevImgs=_impParsed.map(q=>({img_q:q.img_q||'',img_ans:q.img_ans||''}));
+      _impParsed=[];
+      let bad=0;
+      for (let i=0;i<data.length;i++) {
+        const q=normQ(data[i],pendingTopicId);
+        if (q) {
+          if (prevImgs[i]) { if(!q.img_q&&prevImgs[i].img_q) q.img_q=prevImgs[i].img_q; if(!q.img_ans&&prevImgs[i].img_ans) q.img_ans=prevImgs[i].img_ans; }
+          _impParsed.push(q);
+        } else bad++;
+      }
+      document.getElementById('imp-invalid-notice').style.display='none';
+      renderImpQList();
+      document.getElementById('imp-q-count').textContent=
+        `${_impParsed.length} ข้อ${bad?` (ผิดรูปแบบ ${bad} ข้อ)`:''}`;
+      document.getElementById('imp-q-section').style.display='block';
+    } catch(e) {
+      _impParsed=[];
+      document.getElementById('imp-q-section').style.display='none';
+      const notice=document.getElementById('imp-invalid-notice');
+      notice.style.display='block';
+      notice.textContent='⚠ JSON ยังไม่ถูกต้อง: '+e.message;
+    }
+  }, 400);
+}
+
+const IMP_LET=['ก','ข','ค','ง','จ'];
+function renderImpQList() {
+  document.getElementById('imp-q-list').innerHTML=_impParsed.map((q,i)=>`
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 12px">
+      <div style="display:flex;align-items:flex-start;gap:8px">
+        <div style="font-size:.7rem;font-family:var(--mono);color:var(--muted);padding-top:2px;flex-shrink:0">#${i+1}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.88rem;font-weight:500;margin-bottom:5px">${x(q.q)}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:8px">
+            ${q.a.map((a,j)=>`<span style="font-size:.7rem;padding:2px 6px;border-radius:4px;background:${j===q.ans?'rgba(63,185,80,.2)':' var(--surface)'};border:1px solid ${j===q.ans?'rgba(63,185,80,.4)':' var(--border)'};color:${j===q.ans?'var(--green)':' var(--muted)'}">${IMP_LET[j]}. ${x(a)}</span>`).join('')}
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:6px;flex:1;min-width:130px">
+              <div id="impq_q_prev_${i}" style="width:50px;height:38px;border-radius:6px;overflow:hidden;border:1px solid ${q.img_q&&q.img_q.length>10?'rgba(56,139,253,.5)':' var(--border)'};flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--surface)">
+                ${q.img_q&&q.img_q.length>10?`<img src="${q.img_q}" style="width:100%;height:100%;object-fit:cover">`:`<span style="font-size:.7rem;color:var(--muted)">📷</span>`}
+              </div>
+              <div>
+                <div style="font-size:.65rem;color:var(--accent);font-weight:600;margin-bottom:2px">รูปคำถาม</div>
+                <div style="display:flex;gap:3px">
+                  <button class="btn btn-outline btn-sm" style="font-size:.65rem;padding:2px 6px" onclick="tf('impq_q_file_${i}')">เลือก</button>
+                  ${q.img_q&&q.img_q.length>10?`<button class="btn btn-danger btn-sm" style="font-size:.65rem;padding:2px 5px" onclick="clearImpQImg(${i},'q')">✕</button>`:''}
+                </div>
+                <input type="file" id="impq_q_file_${i}" accept="image/*" style="display:none" onchange="attachImpQImg(${i},'q',this)">
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;flex:1;min-width:130px">
+              <div id="impq_ans_prev_${i}" style="width:50px;height:38px;border-radius:6px;overflow:hidden;border:1px solid ${q.img_ans&&q.img_ans.length>10?'rgba(63,185,80,.5)':' var(--border)'};flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--surface)">
+                ${q.img_ans&&q.img_ans.length>10?`<img src="${q.img_ans}" style="width:100%;height:100%;object-fit:cover">`:`<span style="font-size:.7rem;color:var(--muted)">🖼</span>`}
+              </div>
+              <div>
+                <div style="font-size:.65rem;color:var(--green);font-weight:600;margin-bottom:2px">รูปเฉลย</div>
+                <div style="display:flex;gap:3px">
+                  <button class="btn btn-outline btn-sm" style="font-size:.65rem;padding:2px 6px" onclick="tf('impq_ans_file_${i}')">เลือก</button>
+                  ${q.img_ans&&q.img_ans.length>10?`<button class="btn btn-danger btn-sm" style="font-size:.65rem;padding:2px 5px" onclick="clearImpQImg(${i},'ans')">✕</button>`:''}
+                </div>
+                <input type="file" id="impq_ans_file_${i}" accept="image/*" style="display:none" onchange="attachImpQImg(${i},'ans',this)">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function attachImpQImg(idx, type, input) {
+  const f=input.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    if (type==='q') _impParsed[idx].img_q=e.target.result;
+    else            _impParsed[idx].img_ans=e.target.result;
+    renderImpQList();
+  };
+  r.readAsDataURL(f);
+}
+
+function clearImpQImg(idx, type) {
+  if (type==='q') _impParsed[idx].img_q='';
+  else            _impParsed[idx].img_ans='';
+  renderImpQList();
+}
+
+async function doImport() {
+  if (!_impParsed.length) {
+    impAutoPreview();
+    await new Promise(r=>setTimeout(r,500));
+    if (!_impParsed.length){toast('กรุณาวาง JSON ที่ถูกต้อง','err');return;}
+  }
+  showLoad(`กำลังนำเข้า 0/${_impParsed.length} ข้อ...`);
+  cm('import-modal');
+  let saved=0, failed=0;
+  for (let i=0;i<_impParsed.length;i++) {
+    try { await dbAdd('questions',_impParsed[i]); saved++; }
+    catch(e){ failed++; console.error(e); }
+    if ((i+1)%20===0||i===_impParsed.length-1)
+      document.getElementById('loading-msg').textContent=`กำลังนำเข้า ${i+1}/${_impParsed.length} ข้อ...`;
+  }
+  _impParsed=[]; _impImgMap={};
+  hideLoad(); await renderHome();
+  if (failed===0) toast(`นำเข้าสำเร็จ ${saved} ข้อ ✓`,'ok');
+  else toast(`นำเข้า ${saved} ข้อ · ผิดรูปแบบ ${failed} ข้อ`,'err');
+}
+
+
+function normQ(item, topicId) {
+  if (!item || typeof item !== 'object') return null;
+
+  let q='', a=[], ans=0, expl='', img_q='', img_ans='';
+
+  // รูปแบบ A: {q, a, ans}
+  if (item.q && Array.isArray(item.a)) {
+    q=String(item.q).trim();
+    a=item.a.map(v=>String(v).trim());
+    ans=parseInt(item.ans)||0;
+    expl=item.expl||item.explanation||'';
+    img_q=item.img_q||'';
+    img_ans=item.img_ans||'';
+  }
+  // รูปแบบ B: {question, options/choices, answer/correct}
+  else if (item.question && (Array.isArray(item.options)||Array.isArray(item.choices))) {
+    q=String(item.question).trim();
+    a=(item.options||item.choices).map(v=>String(v).trim());
+    ans=parseInt(item.answer??item.ans??item.correct)||0;
+    expl=item.explanation||item.expl||'';
+    img_q=item.img_q||'';
+    img_ans=item.img_ans||'';
+  }
+  else return null;
+
+  // ตรวจสอบ: ต้องมีคำถามและตัวเลือกอย่างน้อย 2 ข้อ
+  if (!q) return null;
+  if (a.length<2) return null;
+
+  // เติม ก. ข. ค. ง. ถ้าตัวเลือกไม่มีตัวอักษรนำ
+  const LTH=['ก','ข','ค','ง'];
+  a=a.map((opt,i)=>{
+    if (i<4 && !opt.startsWith(LTH[i])) return opt; // ปล่อยตามเดิม
+    return opt;
+  }).slice(0,5); // รับสูงสุด 5 ตัวเลือก (ก-จ)
+
+  // ตรวจ ans อยู่ในช่วงที่ถูกต้อง
+  if (ans<0||ans>=a.length) ans=0;
+
+  return {q, a, ans, expl:String(expl), img_q:String(img_q), img_ans:String(img_ans), topicId};
+}
+
+// ── View & Edit Questions ───────────────────────────────────
+let _vqTopicId=null, _vqAll=[], _editQId=null;
+let _vqReorderMode=false;
+let _vqDragId=null;
+
+async function openViewQs(tid) {
+  _vqTopicId=tid;
+  _vqReorderMode=false;
+  const t=topics.find(v=>v.id===tid);
+  document.getElementById('vq-topic-name').textContent=t.name;
+  document.getElementById('vq-search').value='';
+  document.getElementById('vq-mode-btn').textContent='🔀 เปิดโหมดเรียงลำดับ';
+  document.getElementById('vq-reorder-bar').style.display='none';
+  _vqAll=await dbGetIdx('questions','topicId',tid);
+  // เรียงลำดับ: ใช้ qorder ก่อน ถ้าไม่มีใช้ addedAt ถ้าไม่มีใช้ _docId
+  _vqAll.sort((a,b)=>{
+    const ao=a.qorder??null, bo=b.qorder??null;
+    if (ao!==null && bo!==null) return ao-bo;
+    if (ao!==null) return -1;
+    if (bo!==null) return 1;
+    // fallback: addedAt หรือ _docId (lexicographic = insertion order ใน Firestore)
+    return (a.addedAt||0)-(b.addedAt||0) || String(a._docId||'').localeCompare(String(b._docId||''));
+  });
+  renderViewQs(_vqAll);
+  om('viewqs-modal');
+}
+
+function filterViewQs() {
+  const q=document.getElementById('vq-search').value.toLowerCase();
+  renderViewQs(q?_vqAll.filter(v=>v.q.toLowerCase().includes(q)):_vqAll);
+}
+
+function toggleVqMode() {
+  _vqReorderMode=!_vqReorderMode;
+  document.getElementById('vq-mode-btn').textContent=
+    _vqReorderMode?'✅ ปิดโหมดเรียงลำดับ':'🔀 เปิดโหมดเรียงลำดับ';
+  document.getElementById('vq-reorder-bar').style.display=_vqReorderMode?'block':'none';
+  document.getElementById('vq-search').disabled=_vqReorderMode;
+  renderViewQs(_vqAll);
+}
+
+const LET2=['ก','ข','ค','ง','จ'];
+function renderViewQs(list) {
+  const total=_vqAll.length;
+  const done=_vqAll.filter(q=>q.done).length;
+  document.getElementById('vq-count').textContent=`${list.length.toLocaleString()} / ${total.toLocaleString()} ข้อ`;
+  document.getElementById('vq-done-count').textContent=
+    `✓ ทำแล้ว ${done} ข้อ · ยังไม่ได้ทำ ${total-done} ข้อ`;
+
+  if (!list.length) {
+    document.getElementById('vq-list').innerHTML='<div style="color:var(--muted);text-align:center;padding:2rem">ไม่พบข้อสอบ</div>';
+    return;
+  }
+
+  document.getElementById('vq-list').innerHTML=list.map((q,i)=>{
+    const isDone=!!q.done;
+    const qkey=q._docId||String(q.id);
+    const draggable=_vqReorderMode?'draggable="true"':'';
+    const dragEvents=_vqReorderMode
+      ?`ondragstart="vqDragStart(event,'${qkey}')" ondragover="vqDragOver(event,'${qkey}')" ondrop="vqDrop(event,'${qkey}')" ondragend="vqDragEnd()"`:'' ;
+    return `
+    <div id="vqrow_${qkey}" ${draggable} ${dragEvents}
+      style="background:var(--surface2);border:1px solid ${isDone?'rgba(63,185,80,.35)':_vqReorderMode?'var(--border)':'var(--border)'};border-radius:10px;padding:10px 12px;transition:all .15s;${isDone?'opacity:.75':''}">
+      <div style="display:flex;align-items:flex-start;gap:10px">
+        ${_vqReorderMode
+          ?`<div style="cursor:grab;color:var(--muted);font-size:1.1rem;padding-top:2px;flex-shrink:0;user-select:none" title="ลากเพื่อเรียง">⠿</div>`
+          :`<button onclick="toggleQDone('${qkey}')" title="${isDone?'ทำแล้ว — คลิกรีเซ็ต':'ยังไม่ได้ทำ — คลิกทำเครื่องหมาย'}"
+            style="flex-shrink:0;width:22px;height:22px;border-radius:50%;border:2px solid ${isDone?'var(--green)':'var(--border)'};background:${isDone?'var(--green)':'transparent'};cursor:pointer;color:${isDone?'#0a1a0a':'var(--muted)'};font-size:.72rem;display:flex;align-items:center;justify-content:center">
+            ${isDone?'✓':''}
+          </button>`}
+        <div style="font-family:var(--mono);font-size:.72rem;color:var(--muted);flex-shrink:0;padding-top:3px">#${i+1}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.9rem;font-weight:500;margin-bottom:5px">${x(q.q)}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:3px">
+            ${q.a.map((a,j)=>`<span style="font-size:.72rem;padding:2px 7px;border-radius:4px;background:${j===q.ans?'rgba(63,185,80,.2)':'var(--surface)'};border:1px solid ${j===q.ans?'rgba(63,185,80,.4)':'var(--border)'};color:${j===q.ans?'var(--green)':'var(--muted)'}">${LET2[j]}. ${x(a)}</span>`).join('')}
+          </div>
+          ${q.img_q||q.img_ans?`<div style="font-size:.7rem;color:var(--accent);margin-top:4px">📷 มีรูปภาพ</div>`:''}
+        </div>
+        ${!_vqReorderMode?`<button class="btn btn-outline btn-sm" onclick="openEditQ('${q._docId||q.id}')" style="flex-shrink:0">✏️</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// toggle done state on a question
+async function toggleQDone(qid) {
+  const q=_vqAll.find(v=>(v._docId||String(v.id))===String(qid));
+  if (!q) return;
+  q.done=!q.done;
+  await dbPut('questions',q);
+  renderViewQs(_vqAll.filter(v=>{
+    const sq=document.getElementById('vq-search').value.toLowerCase();
+    return !sq||v.q.toLowerCase().includes(sq);
+  }));
+}
+
+async function resetQProgress() {
+  if (!confirm('รีเซ็ตสถานะ "ทำแล้ว" ทุกข้อ?')) return;
+  for (const q of _vqAll) { q.done=false; await dbPut('questions',q); }
+  renderViewQs(_vqAll);
+  toast('รีเซ็ตสถานะแล้ว','ok');
+}
+
+// vq drag-sort — ใช้ _docId เป็น key (Firebase)
+function vqDragStart(e, id) {
+  _vqDragId=id;
+  e.dataTransfer.effectAllowed='move';
+  setTimeout(()=>document.getElementById('vqrow_'+id)?.classList.add('dragging'),0);
+}
+function vqDragOver(e, id) {
+  e.preventDefault();
+  if (_vqDragId===id) return;
+  document.querySelectorAll('[id^=vqrow_]').forEach(r=>r.style.borderColor='var(--border)');
+  const el=document.getElementById('vqrow_'+id);
+  if (el) el.style.borderColor='var(--accent)';
+}
+function vqDrop(e, id) {
+  e.preventDefault();
+  if (!_vqDragId||_vqDragId===id) return;
+  const fi=_vqAll.findIndex(q=>(q._docId||String(q.id))===_vqDragId);
+  const ti=_vqAll.findIndex(q=>(q._docId||String(q.id))===id);
+  if (fi<0||ti<0) return;
+  const [moved]=_vqAll.splice(fi,1);
+  _vqAll.splice(ti,0,moved);
+  renderViewQs(_vqAll);
+}
+function vqDragEnd() {
+  _vqDragId=null;
+  document.querySelectorAll('[id^=vqrow_]').forEach(r=>r.style.borderColor='');
+}
+async function saveQOrder() {
+  showLoad('กำลังบันทึกลำดับ...');
+  for (let i=0;i<_vqAll.length;i++) {
+    _vqAll[i].qorder=i;
+    if (!_vqAll[i].addedAt) _vqAll[i].addedAt=i; // fallback
+    await dbPut('questions',_vqAll[i]);
+  }
+  hideLoad();
+  toast('บันทึกลำดับแล้ว ✓','ok');
+  _vqReorderMode=false;
+  document.getElementById('vq-mode-btn').textContent='🔀 เปิดโหมดเรียงลำดับ';
+  document.getElementById('vq-reorder-bar').style.display='none';
+  renderViewQs(_vqAll);
+}
+
+async function openEditQ(qid) {
+  // ค้นหาโดย _docId ก่อน ถ้าไม่เจอค้นหาโดย id
+  const q=_vqAll.find(v=>(v._docId||v.id)==qid) || _vqAll.find(v=>String(v.id)===String(qid));
+  if (!q) return;
+  _editQId = q._docId || String(q.id); // เก็บ Firestore doc ID
+  // เก็บรูปปัจจุบันลง _imgStore
+  _imgStore['_eqImgQ'] = q.img_q && q.img_q.length>10 ? q.img_q : null;
+  _imgStore['_eqImgAns'] = q.img_ans && q.img_ans.length>10 ? q.img_ans : null;
+  document.getElementById('eq-q').value=q.q;
+  [0,1,2,3].forEach(i=>document.getElementById('eq-a'+i).value=q.a[i]||'');
+  document.getElementById('eq-a4').value=q.a[4]||'';
+  document.getElementById('eq-ans').value=String(q.ans);
+  document.getElementById('eq-expl').value=q.expl||'';
+  // img_q preview
+  const pq=document.getElementById('eq-img-q-prev');
+  const lq=document.getElementById('eq-img-q-lbl');
+  if (_imgStore['_eqImgQ']){pq.src=_imgStore['_eqImgQ'];pq.style.display='block';lq.textContent='รูปโจทย์ปัจจุบัน';}
+  else{pq.src='';pq.style.display='none';lq.textContent='📷 คลิกเปลี่ยนรูปโจทย์';}
+  // img_ans preview
+  const pa=document.getElementById('eq-img-ans-prev');
+  const la=document.getElementById('eq-img-ans-lbl');
+  if (_imgStore['_eqImgAns']){pa.src=_imgStore['_eqImgAns'];pa.style.display='block';la.textContent='รูปเฉลยปัจจุบัน';}
+  else{pa.src='';pa.style.display='none';la.textContent='🖼 คลิกเปลี่ยนรูปเฉลย';}
+  om('editq-modal');
+}
+
+function clearEqImg(type) {
+  if (type==='q') clrImg('eq-img-q-prev','eq-img-q-lbl','📷 คลิกเปลี่ยนรูปโจทย์','_eqImgQ');
+  else            clrImg('eq-img-ans-prev','eq-img-ans-lbl','🖼 คลิกเปลี่ยนรูปเฉลย','_eqImgAns');
+}
+
+async function saveEditQ() {
+  const q=document.getElementById('eq-q').value.trim();
+  const a=[0,1,2,3].map(i=>document.getElementById('eq-a'+i).value.trim());
+  const a4=document.getElementById('eq-a4').value.trim();
+  if (a4) a.push(a4);
+  if (!q){toast('กรุณาใส่โจทย์','err');return;}
+  if (a.slice(0,4).some(v=>!v)){toast('กรุณาใส่ตัวเลือก ก.-ง. ให้ครบ','err');return;}
+  const orig=_vqAll.find(v=>(v._docId||String(v.id))===_editQId);
+  const imgQ  = getImg('_eqImgQ')  || '';
+  const imgAns= getImg('_eqImgAns') || '';
+  const updated={...orig,q,a,
+    ans:parseInt(document.getElementById('eq-ans').value),
+    expl:document.getElementById('eq-expl').value.trim(),
+    img_q:imgQ, img_ans:imgAns};
+  await dbPut('questions',updated);
+  _vqAll=await dbGetIdx('questions','topicId',_vqTopicId);
+  filterViewQs();
+  cm('editq-modal');
+  toast('บันทึกแล้ว ✓','ok');
+  await renderHome();
+}
+
+async function deleteEditQ() {
+  if (!confirm('ลบข้อสอบนี้?')) return;
+  await dbDel('questions',_editQId);
+  _vqAll=await dbGetIdx('questions','topicId',_vqTopicId);
+  filterViewQs();
+  cm('editq-modal');
+  toast('ลบแล้ว','ok');
+  await renderHome();
+}
+
+// ── Card click (open quiz, but not on buttons) ─────────────
+function handleCardClick(e, tid) {
+  if (e.target.closest('.topic-mnu-wrap,.topic-btns,.drag-handle')) return;
+  openStart(tid);
+}
+
+// ── 3-dot menu ─────────────────────────────────────────────
+function toggleTopicMenu(tid, e) {
+  e.stopPropagation();
+  const mnu=document.getElementById('mnu_'+tid);
+  const wasOpen=mnu.classList.contains('open');
+  closeAllMenus();
+  if (!wasOpen) mnu.classList.add('open');
+}
+function closeAllMenus() {
+  document.querySelectorAll('.topic-mnu-dropdown').forEach(m=>m.classList.remove('open'));
+}
+document.addEventListener('click', ()=>closeAllMenus());
+
+// ── Drag & Drop sort ───────────────────────────────────────
+let _dragId=null;
+
+function initDrag() {
+  // touch support via pointer events
+  document.querySelectorAll('.drag-handle').forEach(handle=>{
+    handle.addEventListener('pointerdown', e=>{
+      const card=handle.closest('.topic-card');
+      if (!card) return;
+      card.setAttribute('draggable','true');
+    });
+  });
+}
+
+function onDragStart(e, tid) {
+  _dragId=tid;
+  e.dataTransfer.effectAllowed='move';
+  setTimeout(()=>document.getElementById('tc_'+tid)?.classList.add('dragging'),0);
+}
+function onDragOver(e, tid) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect='move';
+  if (_dragId===tid) return;
+  document.querySelectorAll('.topic-card').forEach(c=>c.classList.remove('drag-over'));
+  document.getElementById('tc_'+tid)?.classList.add('drag-over');
+}
+function onDrop(e, tid) {
+  e.preventDefault();
+  if (!_dragId || _dragId===tid) return;
+  const fromIdx=topics.findIndex(t=>t.id===_dragId);
+  const toIdx=topics.findIndex(t=>t.id===tid);
+  if (fromIdx<0||toIdx<0) return;
+  const [moved]=topics.splice(fromIdx,1);
+  topics.splice(toIdx,0,moved);
+  saveTopicOrder();
+  renderHome();
+}
+function onDragEnd(e) {
+  document.querySelectorAll('.topic-card').forEach(c=>{
+    c.classList.remove('dragging','drag-over');
+  });
+  _dragId=null;
+}
+async function saveTopicOrder() {
+  // save order index into each topic
+  for (let i=0;i<topics.length;i++) {
+    topics[i].order=i;
+    await dbPut('topics',topics[i]);
+  }
+}
+
+// ── Helpers ────────────────────────────────────────────────
+function confirmExit(){om('exit-modal');}
+function forceExit(){cm('exit-modal');showMain('home');}
+function om(id){document.getElementById(id).classList.add('open');}
+function cm(id){document.getElementById(id).classList.remove('open');}
+function tf(id){document.getElementById(id).click();}
+function x(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function readAsDataURL(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.onerror=()=>rej(r.error);r.readAsDataURL(file);});}
+// ── Image store (reliable replacement for window[varName]) ──
+const _imgStore = {};
+
+function prevImg(input, prevId, lblId, varName) {
+  const f=input.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    // เก็บทั้งใน _imgStore และ window เพื่อให้ทำงานได้ทุกกรณี
+    _imgStore[varName]=e.target.result;
+    window[varName]=e.target.result;
+    const p=document.getElementById(prevId);
+    if(p){p.src=e.target.result;p.style.display='block';}
+    const l=document.getElementById(lblId);
+    if(l) l.textContent=f.name;
+  };
+  r.readAsDataURL(f);
+}
+
+// helper ดึงค่ารูปจาก store
+function getImg(varName){ return _imgStore[varName]||window[varName]||null; }
+
+// helper เคลียร์รูป
+function clrImg(prevId,lblId,ph,varName){
+  if(varName){ delete _imgStore[varName]; window[varName]=null; }
+  const p=document.getElementById(prevId); if(p){p.src='';p.style.display='none';}
+  const l=document.getElementById(lblId); if(l) l.textContent=ph;
+}
+function showLoad(msg){document.getElementById('loading-msg').textContent=msg;document.getElementById('loading-overlay').style.display='flex';}
+function hideLoad(){document.getElementById('loading-overlay').style.display='none';}
+let _tt;
+function toast(msg,type=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className='show '+type;
+  clearTimeout(_tt); _tt=setTimeout(()=>el.className='',3500);
+}
+
+init();
+</script>
+</body>
+</html>
