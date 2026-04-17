@@ -705,10 +705,10 @@ textarea{resize:vertical;min-height:90px;font-family:var(--mono);font-size:.78re
 <!-- VIEW/EDIT QUESTIONS MODAL -->
 <div class="modal-overlay" id="viewqs-modal">
   <div class="modal" style="max-width:760px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px;position:sticky;top:-1.5rem;background:var(--surface);padding-top:1.5rem;margin-top:-1.5rem;z-index:20;padding-bottom:.5rem">
       <h3 style="margin:0">📝 ข้อสอบ — <span id="vq-topic-name" style="color:var(--accent)"></span></h3>
       <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-        <input type="text" id="vq-search" placeholder="🔍 ค้นหา..." style="width:140px;margin-bottom:0;font-size:.82rem" oninput="filterViewQs()">
+        <input type="text" id="vq-search" placeholder="🔍 ค้นหา..." autocomplete="off" style="width:140px;margin-bottom:0;font-size:.82rem;position:relative;z-index:10" oninput="filterViewQs()" onclick="this.focus()">
         <span id="vq-count" style="font-size:.78rem;color:var(--muted);font-family:var(--mono)"></span>
         <button class="btn btn-ghost btn-sm" onclick="cm('viewqs-modal')">✕</button>
       </div>
@@ -2343,7 +2343,13 @@ async function openViewQs(tid) {
   om('viewqs-modal');
 }
 
+let _vqFilterTimer=null;
 function filterViewQs() {
+  // debounce เพื่อไม่ให้ re-render ทุกครั้งที่พิมพ์ (ลดโอกาสที่ focus หลุด)
+  clearTimeout(_vqFilterTimer);
+  _vqFilterTimer=setTimeout(_filterViewQsNow, 180);
+}
+function _filterViewQsNow() {
   if (_vqReorderMode) return;
   try {
     const searchEl=document.getElementById('vq-search');
@@ -2366,7 +2372,6 @@ function filterViewQs() {
     renderViewQs(filtered);
   } catch(err) {
     console.error('filterViewQs error:', err);
-    // fallback: แสดงทั้งหมดเพื่อไม่ให้ UI ค้าง
     try { renderViewQs(_vqAll); } catch(e2){}
   }
 }
