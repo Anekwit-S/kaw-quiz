@@ -531,6 +531,39 @@ textarea{resize:vertical;min-height:90px;font-family:var(--mono);font-size:.78re
     <label>ตัวเลือก จ. (ไม่บังคับ)</label><input type="text" id="eq-a4" placeholder="ถ้าไม่ใช้ให้เว้นว่าง">
     <label>คำตอบที่ถูก</label>
     <select id="eq-ans" style="margin-bottom:1rem"><option value="0">ก.</option><option value="1">ข.</option><option value="2">ค.</option><option value="3">ง.</option><option value="4">จ.</option></select>
+    <label>รูปภาพตัวเลือก (ไม่บังคับ)</label>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem" id="eq-choice-imgs">
+      <div style="flex:1;min-width:130px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px">
+        <div style="font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:5px">ก. รูป</div>
+        <div class="img-zone" onclick="tf('eq-img-a0-file')" style="min-height:55px;padding:6px"><div id="eq-img-a0-lbl">📷 เลือก</div><img id="eq-img-a0-prev" class="img-prev"></div>
+        <input type="file" id="eq-img-a0-file" accept="image/*" style="display:none" onchange="prevImg(this,'eq-img-a0-prev','eq-img-a0-lbl','_eqImgA0')">
+        <button class="btn btn-danger btn-sm" style="margin-top:3px;font-size:.7rem" onclick="clrImg('eq-img-a0-prev','eq-img-a0-lbl','📷 เลือก','_eqImgA0')">🗑</button>
+      </div>
+      <div style="flex:1;min-width:130px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px">
+        <div style="font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:5px">ข. รูป</div>
+        <div class="img-zone" onclick="tf('eq-img-a1-file')" style="min-height:55px;padding:6px"><div id="eq-img-a1-lbl">📷 เลือก</div><img id="eq-img-a1-prev" class="img-prev"></div>
+        <input type="file" id="eq-img-a1-file" accept="image/*" style="display:none" onchange="prevImg(this,'eq-img-a1-prev','eq-img-a1-lbl','_eqImgA1')">
+        <button class="btn btn-danger btn-sm" style="margin-top:3px;font-size:.7rem" onclick="clrImg('eq-img-a1-prev','eq-img-a1-lbl','📷 เลือก','_eqImgA1')">🗑</button>
+      </div>
+      <div style="flex:1;min-width:130px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px">
+        <div style="font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:5px">ค. รูป</div>
+        <div class="img-zone" onclick="tf('eq-img-a2-file')" style="min-height:55px;padding:6px"><div id="eq-img-a2-lbl">📷 เลือก</div><img id="eq-img-a2-prev" class="img-prev"></div>
+        <input type="file" id="eq-img-a2-file" accept="image/*" style="display:none" onchange="prevImg(this,'eq-img-a2-prev','eq-img-a2-lbl','_eqImgA2')">
+        <button class="btn btn-danger btn-sm" style="margin-top:3px;font-size:.7rem" onclick="clrImg('eq-img-a2-prev','eq-img-a2-lbl','📷 เลือก','_eqImgA2')">🗑</button>
+      </div>
+      <div style="flex:1;min-width:130px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px">
+        <div style="font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:5px">ง. รูป</div>
+        <div class="img-zone" onclick="tf('eq-img-a3-file')" style="min-height:55px;padding:6px"><div id="eq-img-a3-lbl">📷 เลือก</div><img id="eq-img-a3-prev" class="img-prev"></div>
+        <input type="file" id="eq-img-a3-file" accept="image/*" style="display:none" onchange="prevImg(this,'eq-img-a3-prev','eq-img-a3-lbl','_eqImgA3')">
+        <button class="btn btn-danger btn-sm" style="margin-top:3px;font-size:.7rem" onclick="clrImg('eq-img-a3-prev','eq-img-a3-lbl','📷 เลือก','_eqImgA3')">🗑</button>
+      </div>
+      <div style="flex:1;min-width:130px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px">
+        <div style="font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:5px">จ. รูป (ถ้ามี)</div>
+        <div class="img-zone" onclick="tf('eq-img-a4-file')" style="min-height:55px;padding:6px"><div id="eq-img-a4-lbl">📷 เลือก</div><img id="eq-img-a4-prev" class="img-prev"></div>
+        <input type="file" id="eq-img-a4-file" accept="image/*" style="display:none" onchange="prevImg(this,'eq-img-a4-prev','eq-img-a4-lbl','_eqImgA4')">
+        <button class="btn btn-danger btn-sm" style="margin-top:3px;font-size:.7rem" onclick="clrImg('eq-img-a4-prev','eq-img-a4-lbl','📷 เลือก','_eqImgA4')">🗑</button>
+      </div>
+    </div>
     <label>รูปภาพโจทย์</label>
     <div class="img-zone" onclick="tf('eq-img-q-file')"><div id="eq-img-q-lbl">📷 คลิกเปลี่ยนรูปโจทย์</div><img id="eq-img-q-prev" class="img-prev"></div>
     <input type="file" id="eq-img-q-file" accept="image/*" style="display:none" onchange="prevImg(this,'eq-img-q-prev','eq-img-q-lbl','_eqImgQ')">
@@ -705,10 +738,10 @@ textarea{resize:vertical;min-height:90px;font-family:var(--mono);font-size:.78re
 <!-- VIEW/EDIT QUESTIONS MODAL -->
 <div class="modal-overlay" id="viewqs-modal">
   <div class="modal" style="max-width:760px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px;position:sticky;top:-1.5rem;background:var(--surface);padding-top:1.5rem;margin-top:-1.5rem;z-index:20;padding-bottom:.5rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px">
       <h3 style="margin:0">📝 ข้อสอบ — <span id="vq-topic-name" style="color:var(--accent)"></span></h3>
       <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-        <input type="text" id="vq-search" placeholder="🔍 ค้นหา..." autocomplete="off" style="width:140px;margin-bottom:0;font-size:.82rem;position:relative;z-index:10" oninput="filterViewQs()" onclick="this.focus()">
+        <input type="text" id="vq-search" placeholder="🔍 ค้นหา..." style="width:140px;margin-bottom:0;font-size:.82rem" oninput="filterViewQs()">
         <span id="vq-count" style="font-size:.78rem;color:var(--muted);font-family:var(--mono)"></span>
         <button class="btn btn-ghost btn-sm" onclick="cm('viewqs-modal')">✕</button>
       </div>
@@ -717,6 +750,7 @@ textarea{resize:vertical;min-height:90px;font-family:var(--mono);font-size:.78re
     <div style="display:flex;gap:10px;margin-bottom:.75rem;flex-wrap:wrap;align-items:center">
       <span id="vq-done-count" style="font-size:.8rem;color:var(--muted)"></span>
       <button class="btn btn-outline btn-sm" onclick="toggleVqMode()" id="vq-mode-btn">🔀 เปิดโหมดเรียงลำดับ</button>
+      <button class="btn btn-outline btn-sm" onclick="fixAllQOrder()" title="จัดลำดับทั้งหมดตามที่แสดง">🔧 ตั้งลำดับใหม่ทั้งหมด</button>
       <button class="btn btn-outline btn-sm" onclick="resetQProgress()">🔄 รีเซ็ตสถานะ</button>
     </div>
     <div id="vq-list" style="max-height:60vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px"></div>
@@ -1099,6 +1133,7 @@ async function addSingleQ() {
   let existingQs2=[];
   try { existingQs2=await dbGetIdx('questions','topicId',pendingTopicId); } catch(e){}
   const maxOrder2=existingQs2.reduce((m,q)=>q.qorder!=null?Math.max(m,q.qorder):m,-1);
+  const imgA=[]; // รูปตัวเลือก — เพิ่มจากหน้าแก้ไขได้ทีหลัง
   await dbAdd('questions',{q,a,
     ans:parseInt(document.getElementById('aq-ans').value),
     expl:document.getElementById('aq-expl').value.trim(),
@@ -1244,10 +1279,13 @@ function renderQ() {
     document.getElementById('next-btn').style.display='inline-flex';
     document.getElementById('skip-btn').style.display='none';
     document.getElementById('next-btn').textContent=index===questions.length-1?'ดูผลคะแนน →':'ข้อถัดไป →';
-    document.getElementById('choices').innerHTML=q.a.map((opt,i)=>
-      `<button class="cbtn disabled" id="cb_${i}" style="pointer-events:none;cursor:default">
-        <div class="cletter">${LET[i]}</div><div class="ctext">${x(opt)}</div>
-      </button>`).join('');
+    document.getElementById('choices').innerHTML=q.a.map((opt,i)=>{
+      const ci=(q.img_a||[])[i]||''; const hasCI=ci&&ci.length>10;
+      return `<button class="cbtn disabled" id="cb_${i}" style="pointer-events:none;cursor:default">
+        <div class="cletter">${LET[i]}</div>
+        <div class="ctext">${x(opt)}${hasCI?`<br><img src="${ci}" style="max-width:100%;max-height:200px;border-radius:6px;margin-top:6px;object-fit:contain" onerror="this.style.display='none'">`:''}
+        </div>
+      </button>`;}).join('');
     document.getElementById('cb_'+q.ans).classList.add('correct');
     if (!prevAnswer.correct && prevAnswer.chosen>=0)
       document.getElementById('cb_'+prevAnswer.chosen).classList.add('wrong');
@@ -1269,10 +1307,13 @@ function renderQ() {
     // ยังไม่ตอบ — แสดงปุ่มปกติ
     document.getElementById('next-btn').style.display='none';
     document.getElementById('skip-btn').style.display='inline-flex';
-    document.getElementById('choices').innerHTML=q.a.map((opt,i)=>
-      `<button class="cbtn" id="cb_${i}" onclick="pickAns(${i})">
-        <div class="cletter">${LET[i]}</div><div class="ctext">${x(opt)}</div>
-      </button>`).join('');
+    document.getElementById('choices').innerHTML=q.a.map((opt,i)=>{
+      const ci=(q.img_a||[])[i]||''; const hasCI=ci&&ci.length>10;
+      return `<button class="cbtn" id="cb_${i}" onclick="pickAns(${i})">
+        <div class="cletter">${LET[i]}</div>
+        <div class="ctext">${x(opt)}${hasCI?`<br><img src="${ci}" style="max-width:100%;max-height:200px;border-radius:6px;margin-top:6px;object-fit:contain" onerror="this.style.display='none'">`:''}
+        </div>
+      </button>`;}).join('');
   }
 }
 
@@ -2142,13 +2183,18 @@ function impAutoPreview() {
       if (raw.startsWith('{')) raw='['+raw+']';
       const data=JSON.parse(raw);
       if (!Array.isArray(data)||!data.length) throw new Error('ต้องเป็น array');
-      const prevImgs=_impParsed.map(q=>({img_q:q.img_q||'',img_ans:q.img_ans||''}));
+      const prevImgs=_impParsed.map(q=>({img_q:q.img_q||'',img_ans:q.img_ans||'',img_a:(q.img_a||[]).slice()}));
       _impParsed=[];
       let bad=0;
       for (let i=0;i<data.length;i++) {
         const q=normQ(data[i],pendingTopicId);
         if (q) {
-          if (prevImgs[i]) { if(!q.img_q&&prevImgs[i].img_q) q.img_q=prevImgs[i].img_q; if(!q.img_ans&&prevImgs[i].img_ans) q.img_ans=prevImgs[i].img_ans; }
+          if (prevImgs[i]) {
+            if(!q.img_q&&prevImgs[i].img_q) q.img_q=prevImgs[i].img_q;
+            if(!q.img_ans&&prevImgs[i].img_ans) q.img_ans=prevImgs[i].img_ans;
+            if(!q.img_a) q.img_a=[];
+            for(let j=0;j<5;j++) if((!q.img_a[j]||q.img_a[j].length<10)&&prevImgs[i].img_a?.[j]?.length>10) q.img_a[j]=prevImgs[i].img_a[j];
+          }
           _impParsed.push(q);
         } else bad++;
       }
@@ -2206,11 +2252,45 @@ function renderImpQList() {
               </div>
             </div>
           </div>
+          <!-- รูปภาพตัวเลือก -->
+          <div style="margin-top:6px;border-top:1px solid var(--border);padding-top:6px">
+            <div style="font-size:.65rem;color:var(--muted);margin-bottom:5px;font-weight:600">🖼 รูปภาพตัวเลือก (ไม่บังคับ)</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              ${q.a.map((a,j)=>{const IMP_LET2=['ก','ข','ค','ง','จ'];const img=(q.img_a||[])[j]||'';const hasImg=img&&img.length>10;return `<div style="display:flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:4px 6px">
+                <div id="impq_a${j}_prev_${i}" style="width:36px;height:28px;border-radius:4px;overflow:hidden;border:1px solid ${hasImg?'rgba(56,139,253,.4)':'var(--border)'};flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--surface2)">
+                  ${hasImg?`<img src="${img}" style="width:100%;height:100%;object-fit:cover">`:`<span style="font-size:.6rem;color:var(--muted)">${IMP_LET2[j]}</span>`}
+                </div>
+                <div>
+                  <div style="font-size:.62rem;color:var(--muted);margin-bottom:2px">${IMP_LET2[j]}.</div>
+                  <div style="display:flex;gap:2px">
+                    <button class="btn btn-outline btn-sm" style="font-size:.6rem;padding:1px 5px" onclick="tf('impq_a${j}_file_${i}')">เลือก</button>
+                    ${hasImg?`<button class="btn btn-danger btn-sm" style="font-size:.6rem;padding:1px 4px" onclick="clearImpChoiceImg(${i},${j})">✕</button>`:''}
+                  </div>
+                  <input type="file" id="impq_a${j}_file_${i}" accept="image/*" style="display:none" onchange="attachImpChoiceImg(${i},${j},this)">
+                </div>
+              </div>`}).join('')}
+            </div>
+          </div>
         </div>
       </div>
     </div>`).join('');
 }
 
+function attachImpChoiceImg(idx, choiceIdx, input) {
+  const f=input.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    if(!_impParsed[idx].img_a) _impParsed[idx].img_a=[];
+    _impParsed[idx].img_a[choiceIdx]=e.target.result;
+    renderImpQList();
+  };
+  r.readAsDataURL(f);
+}
+function clearImpChoiceImg(idx, choiceIdx) {
+  if(!_impParsed[idx].img_a) _impParsed[idx].img_a=[];
+  _impParsed[idx].img_a[choiceIdx]='';
+  renderImpQList();
+}
 function attachImpQImg(idx, type, input) {
   const f=input.files[0]; if(!f) return;
   const r=new FileReader();
@@ -2239,44 +2319,23 @@ async function doImport() {
   let existingQs=[];
   try { existingQs=await dbGetIdx('questions','topicId',pendingTopicId); } catch(e){}
   const maxOrder=existingQs.reduce((m,q)=>q.qorder!=null?Math.max(m,q.qorder):m,-1);
-  const baseTime=Date.now();
-  // ตั้ง qorder / addedAt ก่อน
-  for (let i=0;i<_impParsed.length;i++) {
-    _impParsed[i].qorder  = maxOrder + 1 + i;
-    _impParsed[i].addedAt = baseTime + i;
-  }
-  // เขียนเป็น batch ทีละ 450 ข้อ (ข้อจำกัดของ Firestore คือ 500)
   let saved=0, failed=0;
-  const BATCH_SIZE=450;
-  const qsCol=col('questions');
-  for (let start=0;start<_impParsed.length;start+=BATCH_SIZE) {
-    const end=Math.min(start+BATCH_SIZE,_impParsed.length);
-    const batch=_db.batch();
-    const refs=[];
-    for (let i=start;i<end;i++) {
-      const ref=qsCol.doc(); // auto-id
-      const data={..._impParsed[i]}; delete data._docId;
-      batch.set(ref,data);
-      refs.push({i,ref});
-    }
+  const baseTime=Date.now();
+  for (let i=0;i<_impParsed.length;i++) {
     try {
-      await batch.commit();
-      // เซ็ต _docId กลับเข้า object ให้ตรงกับ Firestore
-      refs.forEach(({i,ref})=>{
-        _impParsed[i]._docId=ref.id;
-        _impParsed[i].id=ref.id;
-      });
-      saved+=refs.length;
-    } catch(e) {
-      console.error('batch failed',e);
-      failed+=refs.length;
+      _impParsed[i].qorder  = maxOrder + 1 + i;
+      _impParsed[i].addedAt = baseTime + i;
+      await dbAdd('questions',_impParsed[i]);
+      saved++;
     }
-    document.getElementById('loading-msg').textContent=`กำลังนำเข้า ${end}/${_impParsed.length} ข้อ...`;
+    catch(e){ failed++; console.error(e); }
+    if ((i+1)%20===0||i===_impParsed.length-1)
+      document.getElementById('loading-msg').textContent=`กำลังนำเข้า ${i+1}/${_impParsed.length} ข้อ...`;
   }
   _impParsed=[]; _impImgMap={};
   hideLoad(); await renderHome();
   if (failed===0) toast(`นำเข้าสำเร็จ ${saved} ข้อ ✓`,'ok');
-  else toast(`นำเข้า ${saved} ข้อ · ผิดพลาด ${failed} ข้อ`,'err');
+  else toast(`นำเข้า ${saved} ข้อ · ผิดรูปแบบ ${failed} ข้อ`,'err');
 }
 
 
@@ -2319,7 +2378,8 @@ function normQ(item, topicId) {
   // ตรวจ ans อยู่ในช่วงที่ถูกต้อง
   if (ans<0||ans>=a.length) ans=0;
 
-  return {q, a, ans, expl:String(expl), img_q:String(img_q), img_ans:String(img_ans), topicId};
+  const img_a=[]; for(let i=0;i<5;i++) img_a.push(String(item['img_a'+i]||item.img_a?.[i]||''));
+  return {q, a, ans, expl:String(expl), img_q:String(img_q), img_ans:String(img_ans), img_a, topicId};
 }
 
 // ── View & Edit Questions ───────────────────────────────────
@@ -2333,47 +2393,27 @@ async function openViewQs(tid) {
   const t=topics.find(v=>v.id===tid);
   document.getElementById('vq-topic-name').textContent=t.name;
   document.getElementById('vq-search').value='';
-  document.getElementById('vq-search').disabled=false;
   document.getElementById('vq-mode-btn').textContent='🔀 เปิดโหมดเรียงลำดับ';
   document.getElementById('vq-reorder-bar').style.display='none';
   _vqAll=await dbGetIdx('questions','topicId',tid);
   // เรียงลำดับ: ใช้ qorder ก่อน ถ้าไม่มีใช้ addedAt ถ้าไม่มีใช้ _docId
   _vqAll=sortQs(_vqAll);
+  });
   renderViewQs(_vqAll);
   om('viewqs-modal');
 }
 
-let _vqFilterTimer=null;
 function filterViewQs() {
-  // debounce เพื่อไม่ให้ re-render ทุกครั้งที่พิมพ์ (ลดโอกาสที่ focus หลุด)
-  clearTimeout(_vqFilterTimer);
-  _vqFilterTimer=setTimeout(_filterViewQsNow, 180);
-}
-function _filterViewQsNow() {
   if (_vqReorderMode) return;
-  try {
-    const searchEl=document.getElementById('vq-search');
-    if (!searchEl) return;
-    const q=String(searchEl.value||'').toLowerCase().trim();
-    if (!q){ renderViewQs(_vqAll); return; }
-    const filtered=_vqAll.filter(v=>{
-      if (!v) return false;
-      const qText=String(v.q||'').toLowerCase();
-      if (qText.includes(q)) return true;
-      const explText=String(v.expl||'').toLowerCase();
-      if (explText.includes(q)) return true;
-      if (Array.isArray(v.a)) {
-        for (const a of v.a) {
-          if (String(a||'').toLowerCase().includes(q)) return true;
-        }
-      }
-      return false;
-    });
-    renderViewQs(filtered);
-  } catch(err) {
-    console.error('filterViewQs error:', err);
-    try { renderViewQs(_vqAll); } catch(e2){}
-  }
+  const q=document.getElementById('vq-search').value.toLowerCase().trim();
+  if (!q){ renderViewQs(_vqAll); return; }
+  const filtered=_vqAll.filter(v=>{
+    if (v.q && v.q.toLowerCase().includes(q)) return true;
+    if (v.expl && v.expl.toLowerCase().includes(q)) return true;
+    if (v.a && v.a.some(a=>a.toLowerCase().includes(q))) return true;
+    return false;
+  });
+  renderViewQs(filtered);
 }
 
 function toggleVqMode() {
@@ -2381,9 +2421,7 @@ function toggleVqMode() {
   document.getElementById('vq-mode-btn').textContent=
     _vqReorderMode?'✅ ปิดโหมดเรียงลำดับ':'🔀 เปิดโหมดเรียงลำดับ';
   document.getElementById('vq-reorder-bar').style.display=_vqReorderMode?'block':'none';
-  const searchEl=document.getElementById('vq-search');
-  searchEl.disabled=_vqReorderMode;
-  if (_vqReorderMode) searchEl.value=''; // ล้างค่าค้นหา — กันความสับสนตอนเรียง
+  document.getElementById('vq-search').disabled=_vqReorderMode;
   renderViewQs(_vqAll);
 }
 
@@ -2420,7 +2458,7 @@ function renderViewQs(list) {
         <div style="flex:1;min-width:0">
           <div style="font-size:.9rem;font-weight:500;margin-bottom:5px">${x(q.q)}</div>
           <div style="display:flex;flex-wrap:wrap;gap:3px">
-            ${(Array.isArray(q.a)?q.a:[]).map((a,j)=>`<span style="font-size:.72rem;padding:2px 7px;border-radius:4px;background:${j===q.ans?'rgba(63,185,80,.2)':'var(--surface)'};border:1px solid ${j===q.ans?'rgba(63,185,80,.4)':'var(--border)'};color:${j===q.ans?'var(--green)':'var(--muted)'}">${LET2[j]}. ${x(a)}</span>`).join('')}
+            ${q.a.map((a,j)=>`<span style="font-size:.72rem;padding:2px 7px;border-radius:4px;background:${j===q.ans?'rgba(63,185,80,.2)':'var(--surface)'};border:1px solid ${j===q.ans?'rgba(63,185,80,.4)':'var(--border)'};color:${j===q.ans?'var(--green)':'var(--muted)'}">${LET2[j]}. ${x(a)}</span>`).join('')}
           </div>
           ${q.img_q||q.img_ans?`<div style="font-size:.7rem;color:var(--accent);margin-top:4px">📷 มีรูปภาพ</div>`:''}
         </div>
@@ -2436,7 +2474,10 @@ async function toggleQDone(qid) {
   if (!q) return;
   q.done=!q.done;
   await dbPut('questions',q);
-  filterViewQs();
+  renderViewQs(_vqAll.filter(v=>{
+    const sq=document.getElementById('vq-search').value.toLowerCase();
+    return !sq||v.q.toLowerCase().includes(sq);
+  }));
 }
 
 async function resetQProgress() {
@@ -2465,12 +2506,8 @@ function vqDrop(e, id) {
   const fi=_vqAll.findIndex(q=>(q._docId||String(q.id))===_vqDragId);
   const ti=_vqAll.findIndex(q=>(q._docId||String(q.id))===id);
   if (fi<0||ti<0) return;
-  // ลบข้อที่ลากออก
   const [moved]=_vqAll.splice(fi,1);
-  // ปรับ target index: ถ้าลากลงมาวาง (fi<ti) หลัง splice ออก index เป้าหมายจะลดลง 1
-  const insertAt = fi<ti ? ti-1 : ti;
-  // แทรกหน้าข้อเป้าหมาย (เสมอ) — ทำให้พฤติกรรมคาดเดาได้
-  _vqAll.splice(insertAt,0,moved);
+  _vqAll.splice(ti,0,moved);
   renderViewQs(_vqAll);
 }
 function vqDragEnd() {
@@ -2481,71 +2518,31 @@ async function fixAllQOrder() {
   if (!confirm(`ตั้งลำดับใหม่ทั้งหมด ${_vqAll.length} ข้อ ตามที่แสดงอยู่ตอนนี้?`)) return;
   showLoad('กำลังบันทึกลำดับ...');
   const baseTime=Date.now();
-  try {
-    // อัพเดท in-memory ให้เรียงก่อน
-    for (let i=0;i<_vqAll.length;i++) {
-      _vqAll[i].qorder=i;
-      _vqAll[i].addedAt=baseTime+i;
-    }
-    // เขียนเป็น batch ทีละ 500 op (ข้อจำกัดของ Firestore)
-    const BATCH_SIZE=450;
-    for (let start=0;start<_vqAll.length;start+=BATCH_SIZE) {
-      const end=Math.min(start+BATCH_SIZE,_vqAll.length);
-      const batch=_db.batch();
-      for (let i=start;i<end;i++) {
-        const q=_vqAll[i];
-        const key=q._docId||q.id||q.date;
-        if (!key) continue;
-        batch.update(col('questions').doc(String(key)),{qorder:q.qorder,addedAt:q.addedAt});
-      }
-      await batch.commit();
-      document.getElementById('loading-msg').textContent=`บันทึก ${end}/${_vqAll.length}...`;
-    }
-    hideLoad();
-    toast(`ตั้งลำดับใหม่ทั้งหมด ${_vqAll.length} ข้อ ✓`,'ok');
-    renderViewQs(_vqAll);
-  } catch(e) {
-    console.error(e); hideLoad();
-    toast('บันทึกลำดับไม่สำเร็จ: '+e.message,'err');
+  for (let i=0;i<_vqAll.length;i++) {
+    _vqAll[i].qorder=i;
+    _vqAll[i].addedAt=baseTime+i;
+    await dbPut('questions',_vqAll[i]);
+    if ((i+1)%20===0)
+      document.getElementById('loading-msg').textContent=`บันทึก ${i+1}/${_vqAll.length}...`;
   }
+  hideLoad();
+  toast(`ตั้งลำดับใหม่ทั้งหมด ${_vqAll.length} ข้อ ✓`,'ok');
+  renderViewQs(_vqAll);
 }
 
 async function saveQOrder() {
   showLoad('กำลังบันทึกลำดับ...');
-  try {
-    // อัพเดท in-memory ก่อน — เขียน addedAt ใหม่ด้วยเพื่อให้ sortQs ใช้ addedAt เป็น tiebreaker ที่ถูกต้อง
-    const baseTime=Date.now();
-    for (let i=0;i<_vqAll.length;i++) {
-      _vqAll[i].qorder=i;
-      _vqAll[i].addedAt=baseTime+i;
-    }
-    const BATCH_SIZE=450;
-    for (let start=0;start<_vqAll.length;start+=BATCH_SIZE) {
-      const end=Math.min(start+BATCH_SIZE,_vqAll.length);
-      const batch=_db.batch();
-      for (let i=start;i<end;i++) {
-        const q=_vqAll[i];
-        const key=q._docId||q.id||q.date;
-        if (!key) continue;
-        batch.update(col('questions').doc(String(key)),{qorder:q.qorder,addedAt:q.addedAt});
-      }
-      await batch.commit();
-      document.getElementById('loading-msg').textContent=`บันทึก ${end}/${_vqAll.length}...`;
-    }
-    // โหลดกลับจาก Firestore เพื่อยืนยันว่าสำเร็จจริง และเรียงใหม่
-    _vqAll=await dbGetIdx('questions','topicId',_vqTopicId);
-    _vqAll=sortQs(_vqAll);
-    hideLoad();
-    toast('บันทึกลำดับแล้ว ✓','ok');
-    _vqReorderMode=false;
-    document.getElementById('vq-mode-btn').textContent='🔀 เปิดโหมดเรียงลำดับ';
-    document.getElementById('vq-reorder-bar').style.display='none';
-    document.getElementById('vq-search').disabled=false;
-    renderViewQs(_vqAll);
-  } catch(e) {
-    console.error(e); hideLoad();
-    toast('บันทึกลำดับไม่สำเร็จ: '+e.message,'err');
+  for (let i=0;i<_vqAll.length;i++) {
+    _vqAll[i].qorder=i;
+    if (!_vqAll[i].addedAt) _vqAll[i].addedAt=i; // fallback
+    await dbPut('questions',_vqAll[i]);
   }
+  hideLoad();
+  toast('บันทึกลำดับแล้ว ✓','ok');
+  _vqReorderMode=false;
+  document.getElementById('vq-mode-btn').textContent='🔀 เปิดโหมดเรียงลำดับ';
+  document.getElementById('vq-reorder-bar').style.display='none';
+  renderViewQs(_vqAll);
 }
 
 async function openEditQ(qid) {
@@ -2556,11 +2553,20 @@ async function openEditQ(qid) {
   // เก็บรูปปัจจุบันลง _imgStore
   _imgStore['_eqImgQ'] = q.img_q && q.img_q.length>10 ? q.img_q : null;
   _imgStore['_eqImgAns'] = q.img_ans && q.img_ans.length>10 ? q.img_ans : null;
+  for(let j=0;j<5;j++){ const ia=(q.img_a||[])[j]||''; _imgStore['_eqImgA'+j]= ia.length>10?ia:null; }
   document.getElementById('eq-q').value=q.q;
   [0,1,2,3].forEach(i=>document.getElementById('eq-a'+i).value=q.a[i]||'');
   document.getElementById('eq-a4').value=q.a[4]||'';
   document.getElementById('eq-ans').value=String(q.ans);
   document.getElementById('eq-expl').value=q.expl||'';
+  // img_a previews (choice images)
+  for(let j=0;j<5;j++){
+    const ia=_imgStore['_eqImgA'+j];
+    const pEl=document.getElementById('eq-img-a'+j+'-prev');
+    const lEl=document.getElementById('eq-img-a'+j+'-lbl');
+    if(pEl){ if(ia){pEl.src=ia;pEl.style.display='block';if(lEl)lEl.textContent='รูปปัจจุบัน';}
+    else{pEl.src='';pEl.style.display='none';if(lEl)lEl.textContent='📷 เลือก';}}
+  }
   // img_q preview
   const pq=document.getElementById('eq-img-q-prev');
   const lq=document.getElementById('eq-img-q-lbl');
@@ -2590,12 +2596,12 @@ async function saveEditQ() {
   const imgQ  = getImg('_eqImgQ')  || '';
   const imgAns= getImg('_eqImgAns') || '';
   const updated={...orig,q,a,
+  const imgA=[]; for(let j=0;j<5;j++) imgA.push(getImg('_eqImgA'+j)||'');
     ans:parseInt(document.getElementById('eq-ans').value),
     expl:document.getElementById('eq-expl').value.trim(),
-    img_q:imgQ, img_ans:imgAns};
+    img_q:imgQ, img_ans:imgAns, img_a:imgA};
   await dbPut('questions',updated);
   _vqAll=await dbGetIdx('questions','topicId',_vqTopicId);
-  _vqAll=sortQs(_vqAll);
   filterViewQs();
   cm('editq-modal');
   toast('บันทึกแล้ว ✓','ok');
@@ -2606,7 +2612,6 @@ async function deleteEditQ() {
   if (!confirm('ลบข้อสอบนี้?')) return;
   await dbDel('questions',_editQId);
   _vqAll=await dbGetIdx('questions','topicId',_vqTopicId);
-  _vqAll=sortQs(_vqAll);
   filterViewQs();
   cm('editq-modal');
   toast('ลบแล้ว','ok');
