@@ -2594,8 +2594,8 @@ async function saveEditQ() {
   const orig=_vqAll.find(v=>(v._docId||String(v.id))===_editQId);
   const imgQ  = getImg('_eqImgQ')  || '';
   const imgAns= getImg('_eqImgAns') || '';
-  const updated={...orig,q,a,
   const imgA=[]; for(let j=0;j<5;j++) imgA.push(getImg('_eqImgA'+j)||'');
+  const updated={...orig,q,a,
     ans:parseInt(document.getElementById('eq-ans').value),
     expl:document.getElementById('eq-expl').value.trim(),
     img_q:imgQ, img_ans:imgAns, img_a:imgA};
