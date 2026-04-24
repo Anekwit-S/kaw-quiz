@@ -598,6 +598,39 @@ textarea{resize:vertical;min-height:90px;font-family:var(--mono);font-size:.78re
     <label>ตัวเลือก จ. (ไม่บังคับ)</label><input type="text" id="aq-a4" placeholder="ถ้าไม่ใช้ให้เว้นว่าง">
     <label>คำตอบที่ถูก</label>
     <select id="aq-ans" style="margin-bottom:1rem"><option value="0">ก.</option><option value="1">ข.</option><option value="2">ค.</option><option value="3">ง.</option><option value="4">จ.</option></select>
+    <label>รูปภาพตัวเลือก (ไม่บังคับ)</label>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem">
+      <div style="flex:1;min-width:120px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px">
+        <div style="font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:5px">ก. รูป</div>
+        <div class="img-zone" onclick="tf('aq-img-a0-file')" style="min-height:50px;padding:5px"><div id="aq-img-a0-lbl">📷 เลือก</div><img id="aq-img-a0-prev" class="img-prev"></div>
+        <input type="file" id="aq-img-a0-file" accept="image/*" style="display:none" onchange="prevImg(this,'aq-img-a0-prev','aq-img-a0-lbl','_aqImgA0')">
+        <button class="btn btn-danger btn-sm" style="margin-top:3px;font-size:.7rem" onclick="clrImg('aq-img-a0-prev','aq-img-a0-lbl','📷 เลือก','_aqImgA0')">🗑</button>
+      </div>
+      <div style="flex:1;min-width:120px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px">
+        <div style="font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:5px">ข. รูป</div>
+        <div class="img-zone" onclick="tf('aq-img-a1-file')" style="min-height:50px;padding:5px"><div id="aq-img-a1-lbl">📷 เลือก</div><img id="aq-img-a1-prev" class="img-prev"></div>
+        <input type="file" id="aq-img-a1-file" accept="image/*" style="display:none" onchange="prevImg(this,'aq-img-a1-prev','aq-img-a1-lbl','_aqImgA1')">
+        <button class="btn btn-danger btn-sm" style="margin-top:3px;font-size:.7rem" onclick="clrImg('aq-img-a1-prev','aq-img-a1-lbl','📷 เลือก','_aqImgA1')">🗑</button>
+      </div>
+      <div style="flex:1;min-width:120px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px">
+        <div style="font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:5px">ค. รูป</div>
+        <div class="img-zone" onclick="tf('aq-img-a2-file')" style="min-height:50px;padding:5px"><div id="aq-img-a2-lbl">📷 เลือก</div><img id="aq-img-a2-prev" class="img-prev"></div>
+        <input type="file" id="aq-img-a2-file" accept="image/*" style="display:none" onchange="prevImg(this,'aq-img-a2-prev','aq-img-a2-lbl','_aqImgA2')">
+        <button class="btn btn-danger btn-sm" style="margin-top:3px;font-size:.7rem" onclick="clrImg('aq-img-a2-prev','aq-img-a2-lbl','📷 เลือก','_aqImgA2')">🗑</button>
+      </div>
+      <div style="flex:1;min-width:120px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px">
+        <div style="font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:5px">ง. รูป</div>
+        <div class="img-zone" onclick="tf('aq-img-a3-file')" style="min-height:50px;padding:5px"><div id="aq-img-a3-lbl">📷 เลือก</div><img id="aq-img-a3-prev" class="img-prev"></div>
+        <input type="file" id="aq-img-a3-file" accept="image/*" style="display:none" onchange="prevImg(this,'aq-img-a3-prev','aq-img-a3-lbl','_aqImgA3')">
+        <button class="btn btn-danger btn-sm" style="margin-top:3px;font-size:.7rem" onclick="clrImg('aq-img-a3-prev','aq-img-a3-lbl','📷 เลือก','_aqImgA3')">🗑</button>
+      </div>
+      <div style="flex:1;min-width:120px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px">
+        <div style="font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:5px">จ. รูป (ถ้ามี)</div>
+        <div class="img-zone" onclick="tf('aq-img-a4-file')" style="min-height:50px;padding:5px"><div id="aq-img-a4-lbl">📷 เลือก</div><img id="aq-img-a4-prev" class="img-prev"></div>
+        <input type="file" id="aq-img-a4-file" accept="image/*" style="display:none" onchange="prevImg(this,'aq-img-a4-prev','aq-img-a4-lbl','_aqImgA4')">
+        <button class="btn btn-danger btn-sm" style="margin-top:3px;font-size:.7rem" onclick="clrImg('aq-img-a4-prev','aq-img-a4-lbl','📷 เลือก','_aqImgA4')">🗑</button>
+      </div>
+    </div>
     <label>รูปภาพโจทย์ (ไม่บังคับ)</label>
     <div class="img-zone" onclick="tf('aq-img-q-file')"><div id="aq-img-q-lbl">📷 คลิกอัพโหลดรูปโจทย์</div><img id="aq-img-q-prev" class="img-prev"></div>
     <input type="file" id="aq-img-q-file" accept="image/*" style="display:none" onchange="prevImg(this,'aq-img-q-prev','aq-img-q-lbl','_aqImgQ')">
@@ -1119,6 +1152,7 @@ function openAddQ(tid) {
   document.getElementById('aq-ans').value='0';
   clrImg('aq-img-q-prev','aq-img-q-lbl','📷 คลิกอัพโหลดรูปโจทย์','_aqImgQ');
   clrImg('aq-img-ans-prev','aq-img-ans-lbl','🖼 คลิกอัพโหลดรูปเฉลย','_aqImgAns');
+  for(let j=0;j<5;j++) clrImg('aq-img-a'+j+'-prev','aq-img-a'+j+'-lbl','📷 เลือก','_aqImgA'+j);
   om('addq-modal');
 }
 async function addSingleQ() {
@@ -1133,11 +1167,11 @@ async function addSingleQ() {
   let existingQs2=[];
   try { existingQs2=await dbGetIdx('questions','topicId',pendingTopicId); } catch(e){}
   const maxOrder2=existingQs2.reduce((m,q)=>q.qorder!=null?Math.max(m,q.qorder):m,-1);
-  const imgA=[]; // รูปตัวเลือก — เพิ่มจากหน้าแก้ไขได้ทีหลัง
+  const imgA=[]; for(let j=0;j<5;j++) imgA.push(getImg('_aqImgA'+j)||'');
   await dbAdd('questions',{q,a,
     ans:parseInt(document.getElementById('aq-ans').value),
     expl:document.getElementById('aq-expl').value.trim(),
-    img_q:imgQ, img_ans:imgAns,
+    img_q:imgQ, img_ans:imgAns, img_a:imgA,
     qorder: maxOrder2+1,
     addedAt:Date.now(),
     topicId:pendingTopicId});
